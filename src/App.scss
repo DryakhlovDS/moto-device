@@ -1,0 +1,24 @@
+:root {
+  --color-yellow: #faed26;
+  --color-gray: #5a5560;
+  --color-brown: #9b786f;
+  --color-purple: #46344e;
+  --color-coffee: #9d8d8f;
+  --color-white: #ffffff;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.App {
+  text-align: left;
+}

@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.scss";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import routes from "./routes";
+import Header from "./components/header/header";
+import { DeviceContext, devices } from "./store/store";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className='App'>
+        <Header />
+        <DeviceContext.Provider value={devices}>
+          <main>
+            <Switch>
+              {routes.map((item, index) => (
+                <Route
+                  key={index}
+                  path={item.path}
+                  component={item.component}
+                  exact
+                />
+              ))}
+              <Redirect to='/' />
+            </Switch>
+          </main>
+        </DeviceContext.Provider>
+      </div>
+    </Router>
   );
 }
 
