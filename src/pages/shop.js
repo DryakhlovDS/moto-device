@@ -1,6 +1,6 @@
 import "./shop.scss";
 import { Link } from "react-router-dom";
-import deviceImg from "../static/device.jpg";
+// import deviceImg from "../static/device.jpg";
 import { DeviceContext } from "../store/store";
 import { useContext } from "react";
 
@@ -35,7 +35,7 @@ function Shop() {
                 return (
                   <div className='card' key={index}>
                     <div className='card__image'>
-                      <img src={deviceImg} alt='device' />
+                      <img src={item.image} alt='device' />
                     </div>
                     <div className='card__header'>
                       <h3 className='card__title'>{item.name}</h3>

@@ -3,15 +3,21 @@ import { useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { DeviceContext } from "../store/store";
 
-import deviceImg from "../static/device.jpg";
+// import deviceImg from "../static/device.jpg";
 
 function Device() {
   const { devices, addToCart } = useContext(DeviceContext);
   // const [goods, setGoods] = useContext(GoodsContext);
   const { id } = useParams();
-  const { name, description, props, inStock, price, id: idDevice } = devices[
-    id.slice(1)
-  ];
+  const {
+    name,
+    description,
+    props,
+    inStock,
+    price,
+    id: idDevice,
+    image: deviceImg,
+  } = devices[id.slice(1)];
 
   return (
     <section className='device'>

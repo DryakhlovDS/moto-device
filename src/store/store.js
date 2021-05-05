@@ -6,7 +6,8 @@ export const devices = {
     id: "t1",
     inStock: 2,
     price: 1200,
-    image: "url",
+    image:
+      "https://srpmqa.ch.files.1drv.com/y4m3u5O-u9y1CRVMHN8tYi7cgErp-3JbBn2n7lkiWvu7BWMOJm9iZtWCLErntO5Hgl-yD5ww2Ym6i2oSs55vtOr5OprsqgOvpClCPnGI6Xkmhborb9N1qi4sXNb_TKWg0lUNTJN2aFQ-NNeat54riLtIBzG9PlD1pUvgweqrhUhtGUFf23yD9f1y-bOiW-hbZau-nvHAgJYu1JmZ-LFlXpUjA/device.jpg?psid=1",
     description: {
       short:
         "Здесь нужно дать краткую информацию об устройстве, его свойствах. Написать какое оно хорошее и замечательное. Полная информация будет предоставлена на страничке описания этого устройства по ссылке ниже.",
@@ -29,7 +30,8 @@ export const devices = {
     id: "t2",
     inStock: 1,
     price: 800,
-    image: "url",
+    image:
+      "https://srpmqa.ch.files.1drv.com/y4m3u5O-u9y1CRVMHN8tYi7cgErp-3JbBn2n7lkiWvu7BWMOJm9iZtWCLErntO5Hgl-yD5ww2Ym6i2oSs55vtOr5OprsqgOvpClCPnGI6Xkmhborb9N1qi4sXNb_TKWg0lUNTJN2aFQ-NNeat54riLtIBzG9PlD1pUvgweqrhUhtGUFf23yD9f1y-bOiW-hbZau-nvHAgJYu1JmZ-LFlXpUjA/device.jpg?psid=1",
     description: {
       short:
         "Здесь нужно дать краткую информацию об устройстве, его свойствах. Написать какое оно хорошее и замечательное. Полная информация будет предоставлена на страничке описания этого устройства по ссылке ниже.",
@@ -52,7 +54,8 @@ export const devices = {
     id: "t3",
     inStock: 3,
     price: 1000,
-    image: "url",
+    image:
+      "https://srpmqa.ch.files.1drv.com/y4m3u5O-u9y1CRVMHN8tYi7cgErp-3JbBn2n7lkiWvu7BWMOJm9iZtWCLErntO5Hgl-yD5ww2Ym6i2oSs55vtOr5OprsqgOvpClCPnGI6Xkmhborb9N1qi4sXNb_TKWg0lUNTJN2aFQ-NNeat54riLtIBzG9PlD1pUvgweqrhUhtGUFf23yD9f1y-bOiW-hbZau-nvHAgJYu1JmZ-LFlXpUjA/device.jpg?psid=1",
     description: {
       short:
         "Здесь нужно дать краткую информацию об устройстве, его свойствах. Написать какое оно хорошее и замечательное. Полная информация будет предоставлена на страничке описания этого устройства по ссылке ниже.",

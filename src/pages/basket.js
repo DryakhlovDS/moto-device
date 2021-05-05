@@ -2,7 +2,7 @@ import "./basket.scss";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { GoodsContext } from "../store/store";
-import deviceImg from "../static/device.jpg";
+// import deviceImg from "../static/device.jpg";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 function Basket() {
@@ -19,13 +19,12 @@ function Basket() {
     switch (func) {
       case "minus":
         goods[indexDevice].count--;
-        setGoods([...goods]);
         break;
       case "plus":
         goods[indexDevice].count++;
-        setGoods([...goods]);
         break;
     }
+    setGoods([...goods]);
   };
   const deleteGoods = (idDevice) => {
     const refreshGoods = goods.filter((item) => item.id !== idDevice);
@@ -62,7 +61,7 @@ function Basket() {
               {goods.map((item, index) => (
                 <div className='card-goods' key={index}>
                   <div className='card-goods__image'>
-                    <img src={deviceImg} alt='device' />
+                    <img src={item.image} alt='device' />
                   </div>
                   <div className='card-goods__header'>
                     <h3 className='card-goods__title'>{item.name}</h3>

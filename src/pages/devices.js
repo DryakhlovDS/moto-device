@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import deviceImg from "../static/device.jpg";
+// import deviceImg from "../static/device.jpg";
 import { DeviceContext } from "../store/store";
 import "./devices.scss";
 
@@ -12,7 +12,7 @@ function Devices() {
         <div className='devices__inner'>
           <h2>Устройства</h2>
           {Object.values(devices).map(
-            ({ name, id, description, image }, index) => {
+            ({ name, id, description, image: deviceImg }, index) => {
               return (
                 <div className='devices__item' key={index}>
                   <div className='devices__image'>
