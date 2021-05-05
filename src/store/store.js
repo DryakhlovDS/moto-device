@@ -5,6 +5,7 @@ export const devices = {
     name: "Device #1",
     id: "t1",
     inStock: 2,
+    price: 1200,
     image: "url",
     description: {
       short:
@@ -27,6 +28,7 @@ export const devices = {
     name: "Device #2",
     id: "t2",
     inStock: 1,
+    price: 800,
     image: "url",
     description: {
       short:
@@ -49,6 +51,7 @@ export const devices = {
     name: "Device #3",
     id: "t3",
     inStock: 3,
+    price: 1000,
     image: "url",
     description: {
       short:
@@ -70,3 +73,5 @@ export const devices = {
 };
 
 export const DeviceContext = createContext();
+
+export const GoodsContext = createContext();

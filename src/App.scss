@@ -4,6 +4,7 @@
   --color-brown: #9b786f;
   --color-purple: #46344e;
   --color-coffee: #9d8d8f;
+  --color-coffee90: rgba(157, 141, 143, 0.8);
   --color-white: #ffffff;
 }
 
@@ -21,4 +22,13 @@
 
 .App {
   text-align: left;
+}
+
+.icon-button {
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-yellow);
+  }
 }

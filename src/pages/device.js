@@ -2,15 +2,17 @@ import "./device.scss";
 import { useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { DeviceContext } from "../store/store";
+
 import deviceImg from "../static/device.jpg";
 
 function Device() {
-  const devices = useContext(DeviceContext);
+  const { devices, addToCart } = useContext(DeviceContext);
+  // const [goods, setGoods] = useContext(GoodsContext);
   const { id } = useParams();
-  const { name, image, description, props } = devices[id.slice(1)];
-  const addToCart = () => {
-    console.log("Add device in cart");
-  };
+  const { name, description, props, inStock, price, id: idDevice } = devices[
+    id.slice(1)
+  ];
+
   return (
     <section className='device'>
       <div className='container'>
@@ -36,9 +38,11 @@ function Device() {
               })}
             </tbody>
           </table>
+          <p> В наличии: {inStock} шт.</p>
+          <p> Стоимость: {price} руб.</p>
           <div className='device__links'>
             <Link to='/shop'>Купить сейчас</Link>
-            <button onClick={addToCart}>В Корзину</button>
+            <button onClick={() => addToCart(idDevice)}>В Корзину</button>
           </div>
         </div>
       </div>

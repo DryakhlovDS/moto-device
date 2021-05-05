@@ -5,7 +5,7 @@ import { DeviceContext } from "../store/store";
 import "./devices.scss";
 
 function Devices() {
-  const devices = useContext(DeviceContext);
+  const { devices } = useContext(DeviceContext);
   return (
     <section className='devices'>
       <div className='container'>

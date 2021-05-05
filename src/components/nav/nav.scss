@@ -6,4 +6,37 @@
   & li + li {
     margin-left: 20px;
   }
+
+  & li {
+    position: relative;
+
+    & a > svg {
+      margin-bottom: -5px;
+    }
+
+    &::after {
+      --color-line: var(--color-white);
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 1px;
+      left: 0;
+      bottom: -3px;
+      background: var(--color-line);
+      transition: width 0.3s linear;
+    }
+
+    &.nav__active {
+      &::after {
+        width: 100%;
+      }
+    }
+
+    &:hover {
+      &::after {
+        --color-line: var(--color-yellow);
+        width: 100%;
+      }
+    }
+  }
 }
