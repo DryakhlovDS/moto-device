@@ -5,7 +5,7 @@ import { DeviceContext } from "../store/store";
 import { useContext } from "react";
 
 function Shop() {
-  const { devices, addToCart } = useContext(DeviceContext);
+  const { devices, addToCart, buyNow } = useContext(DeviceContext);
 
   return (
     <section className='shop'>
@@ -43,14 +43,16 @@ function Shop() {
                     <div className='card__body'>
                       <p>{item.description.short}</p>
                       <p>
-                        <Link to={`/device/:${item.id}`}>Подробнее</Link>
+                        <Link to={`/device/${item.id}`}>Подробнее</Link>
                       </p>
                       <p>В наличии: {item.inStock} шт.</p>
                       <p> Стоимость: {item.price} руб.</p>
                     </div>
                     <div className='card__footer'>
                       <div className='card__btns'>
-                        <Link to='/shop'>Купить сейчас</Link>
+                        <button onClick={() => buyNow(item.id)}>
+                          Купить сейчас
+                        </button>
                         <button onClick={() => addToCart(item.id)}>
                           В Корзину
                         </button>

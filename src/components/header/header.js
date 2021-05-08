@@ -4,11 +4,9 @@ import Nav from "../nav/nav";
 import { useState } from "react";
 // import enginIcon from "../../static/v-engine.svg";
 
-export default function Header() {
-  let [isLogin, setLogin] = useState(false);
-  const enterUser = () => {
-    setLogin(true);
-  };
+export default function Header({ openLogin }) {
+  let [isLogin] = useState(false);
+
   return (
     <header className='header'>
       <div className='container'>
@@ -22,7 +20,10 @@ export default function Header() {
           <div className='header__user'>
             {isLogin && <User />}
             {!isLogin && (
-              <button className='header__login' onClick={enterUser}>
+              <button
+                className='header__login'
+                onClick={() => openLogin("login")}
+              >
                 Войти
               </button>
             )}
@@ -39,7 +40,7 @@ function Logo() {
       {/* <img src={enginIcon} alt='Engine' /> */}
       <svg
         id='Layer_1'
-        enable-background='new 0 0 511.982 511.982'
+        enableBackground='new 0 0 511.982 511.982'
         height='40'
         viewBox='0 0 511.982 511.982'
         width='40'

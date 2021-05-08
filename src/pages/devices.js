@@ -21,7 +21,7 @@ function Devices() {
                   <div className='devices__description'>
                     <h3>{name}</h3>
                     <p>{description.short}</p>
-                    <Link to={`/device/:${id}`}>Подробнее</Link>
+                    <Link to={`/device/${id}`}>Подробнее</Link>
                   </div>
                 </div>
               );

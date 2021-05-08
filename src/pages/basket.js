@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { GoodsContext } from "../store/store";
 // import deviceImg from "../static/device.jpg";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import CardHorizon from "../components/CardHorizon/CardHorizon";
 
 function Basket() {
   const [goods, setGoods] = useContext(GoodsContext);
@@ -59,45 +60,32 @@ function Basket() {
             </aside>
             <div className='basket__goods'>
               {goods.map((item, index) => (
-                <div className='card-goods' key={index}>
-                  <div className='card-goods__image'>
-                    <img src={item.image} alt='device' />
-                  </div>
-                  <div className='card-goods__header'>
-                    <h3 className='card-goods__title'>{item.name}</h3>
-                  </div>
-                  <div className='card-goods__body'>
-                    <p>{item.description.short}</p>
-                    <p>В наличии: {item.inStock} шт.</p>
-                    <p> Стоимость: {item.price} руб.</p>
-                  </div>
-                  <div className='card-goods__footer'>
-                    <div className='options'>
-                      <label htmlFor='count'>Количество</label>
-                      <div className='options__control'>
-                        <button
-                          className='options__btn'
-                          onClick={() => changeCount(item.id, "minus")}
-                          disabled={item.count < 2}
-                        >
-                          -
-                        </button>
-                        <output name='count'>{item.count}</output>
-                        <button
-                          className='options__btn'
-                          onClick={() => changeCount(item.id, "plus")}
-                          disabled={item.count === item.inStock}
-                        >
-                          +
-                        </button>
-                      </div>
+                <CardHorizon item={item} key={index}>
+                  <div className='options'>
+                    <label htmlFor='count'>Количество</label>
+                    <div className='options__control'>
+                      <button
+                        className='options__btn'
+                        onClick={() => changeCount(item.id, "minus")}
+                        disabled={item.count < 2}
+                      >
+                        -
+                      </button>
+                      <output name='count'>{item.count}</output>
+                      <button
+                        className='options__btn'
+                        onClick={() => changeCount(item.id, "plus")}
+                        disabled={item.count === item.inStock}
+                      >
+                        +
+                      </button>
                     </div>
-                    <DeleteForeverIcon
-                      className='icon-button'
-                      onClick={() => deleteGoods(item.id)}
-                    />
                   </div>
-                </div>
+                  <DeleteForeverIcon
+                    className='icon-button'
+                    onClick={() => deleteGoods(item.id)}
+                  />
+                </CardHorizon>
               ))}
             </div>
           </div>
