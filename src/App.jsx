@@ -1,22 +1,34 @@
 import "./App.scss";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import { myRoom, publicRoutes } from "./routes";
 import Header from "./components/header/header";
 import { DeviceContext, devices, GoodsContext } from "./store/store";
+import { UserContext } from "./store/UserStore";
 import Modal from "./components/modal/modal.jsx";
 import Login from "./components/Login/Login.jsx";
 import Message from "./components/Message/Message.jsx";
 import DeviceInfo from "./components/DeviceInfo/deviceInfo";
+import { observer } from "mobx-react-lite";
+import { check } from "./http/userAPI";
 
-function App() {
+const App = observer(() => {
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    check().then((data) => {
+      user.setUser(data);
+      user.setIsAuth(true);
+    });
+  }, []);
+
   const [goods, setGoods] = useState([]);
   let [isOpenModal, setOpenModal] = useState(false);
   let [typeOfModal, setTypeOfModal] = useState("");
   let [message, setMessage] = useState({});
   let history = useHistory();
-  const admin = true;
 
+  const admin = user.isAdmin;
   const openModal = (type) => {
     setTypeOfModal(type);
     setOpenModal(true);
@@ -79,7 +91,7 @@ function App() {
         </DeviceContext.Provider>
       </GoodsContext.Provider>
       <Modal isOpen={isOpenModal} setOpenModal={setOpenModal}>
-        {typeOfModal === "login" && <Login />}
+        {typeOfModal === "login" && <Login setOpenModal={setOpenModal} />}
         {typeOfModal === "mess" && (
           <Message
             title={message.title}
@@ -93,6 +105,6 @@ function App() {
       </Modal>
     </div>
   );
-}
+});
 
 export default App;

@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
+import UserStore, { UserContext } from "./store/UserStore";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <App />
+      <UserContext.Provider value={{ user: new UserStore() }}>
+        <App />
+      </UserContext.Provider>
     </Router>
   </React.StrictMode>,
   document.getElementById("root")

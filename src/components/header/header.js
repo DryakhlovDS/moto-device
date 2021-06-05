@@ -1,12 +1,15 @@
 import "./header.scss";
 import User from "../user/user";
 import Nav from "../nav/nav";
-import { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../../store/UserStore";
+import { observer } from "mobx-react-lite";
+
 // import enginIcon from "../../static/v-engine.svg";
 
-export default function Header({ openLogin }) {
-  let [isLogin] = useState(false);
-
+const Header = observer(({ openLogin }) => {
+  const { user } = useContext(UserContext);
+  const isLogin = user.isAuth;
   return (
     <header className='header'>
       <div className='container'>
@@ -32,7 +35,8 @@ export default function Header({ openLogin }) {
       </div>
     </header>
   );
-}
+});
+export default Header;
 
 function Logo() {
   return (
