@@ -1,18 +1,65 @@
 // import { useLocation } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { DeviceContext } from "../../store/store";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { DevicesContext } from "../../store/DevicesStore";
 import CardHorizon from "../../components/CardHorizon/CardHorizon.jsx";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { getAllDevices, deleteDevice } from "../../http/deviceAPI";
+import EditIcon from "@material-ui/icons/Edit";
+import { observer } from "mobx-react-lite";
 
-function Stock() {
-  // const url = useLocation();
-  // const path = url.pathname.split("/")[2];
+const Stock = observer(() => {
+  const { isOpenModal, openModal, setMessage, dialogResult } =
+    useContext(DeviceContext);
+  const { devices } = useContext(DevicesContext);
+  const [selected, setSelected] = useState("");
+  let history = useHistory();
 
-  const { devices, openModal } = useContext(DeviceContext);
+  useEffect(() => {
+    getAllDevices().then((data) => {
+      const devs = {};
+      data.forEach((device) => {
+        devs[device.id] = device;
+      });
+      devices.setAllDevices(devs);
+    });
+  }, [isOpenModal]);
+
+  useEffect(() => {
+    if (dialogResult === "Удалить") {
+      deleteDevice(selected).then((res) => {
+        if (res === 200) {
+          setMessage({
+            title: "Успешно",
+            text: `Устройство удалено`,
+            cancel: "",
+            ok: "OK",
+          });
+          openModal("mess");
+        }
+      });
+    }
+  }, [dialogResult]);
+
   const addDevice = () => {
-    console.log("open empty form");
-    openModal("device");
+    // openModal("device");
+    history.push("/lk/addDevice");
+  };
+
+  const editDevice = (id) => {
+    history.push("/lk/addDevice/" + id);
+  };
+
+  const openDialogToDelete = (id, name) => {
+    setMessage({
+      title: "Внимание!",
+      text: `Вы действительно хотите удалить ${name} ?`,
+      cancel: "Отмена",
+      ok: "Удалить",
+    });
+    setSelected(id);
+    openModal("mess");
   };
 
   return (
@@ -20,11 +67,15 @@ function Stock() {
       <h4 className='stock__title'>Устройства</h4>
       <Link to='/lk'>Назад</Link>
       <div className='stock__devices'>
-        {Object.values(devices).map((device) => (
+        {Object.values(devices.allDevices).map((device) => (
           <CardHorizon item={device} key={device.id}>
             <DeleteForeverIcon
               className='icon-button'
-              onClick={() => console.log(device.id)}
+              onClick={() => openDialogToDelete(device.id, device.name)}
+            />
+            <EditIcon
+              className='icon-button'
+              onClick={() => editDevice(device.id)}
             />
           </CardHorizon>
         ))}
@@ -36,6 +87,6 @@ function Stock() {
       </div>
     </div>
   );
-}
+});
 
 export default Stock;

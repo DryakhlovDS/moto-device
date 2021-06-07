@@ -5,20 +5,30 @@ import { myRoom, publicRoutes } from "./routes";
 import Header from "./components/header/header";
 import { DeviceContext, devices, GoodsContext } from "./store/store";
 import { UserContext } from "./store/UserStore";
+import { DevicesContext } from "./store/DevicesStore";
 import Modal from "./components/modal/modal.jsx";
 import Login from "./components/Login/Login.jsx";
 import Message from "./components/Message/Message.jsx";
 import DeviceInfo from "./components/DeviceInfo/deviceInfo";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
+import { getAllDevices } from "./http/deviceAPI";
 
 const App = observer(() => {
   const { user } = useContext(UserContext);
+  const { devices } = useContext(DevicesContext);
 
   useEffect(() => {
     check().then((data) => {
       user.setUser(data);
       user.setIsAuth(true);
+    });
+    getAllDevices().then((data) => {
+      const devs = {};
+      data.forEach((device) => {
+        devs[device.id] = device;
+      });
+      devices.setAllDevices(devs);
     });
   }, []);
 
@@ -26,6 +36,7 @@ const App = observer(() => {
   let [isOpenModal, setOpenModal] = useState(false);
   let [typeOfModal, setTypeOfModal] = useState("");
   let [message, setMessage] = useState({});
+  const [dialogResult, setDialogResult] = useState("");
   let history = useHistory();
 
   const admin = user.isAdmin;
@@ -36,7 +47,7 @@ const App = observer(() => {
 
   const closeModal = (value) => {
     setOpenModal(false);
-    Object.assign(message, { result: value });
+    setDialogResult(value);
     setMessage(message);
   };
 
@@ -65,7 +76,15 @@ const App = observer(() => {
       <GoodsContext.Provider value={[goods, setGoods]}>
         <Header openLogin={openModal} />
         <DeviceContext.Provider
-          value={{ devices, addToCart, buyNow, openModal }}
+          value={{
+            addToCart,
+            buyNow,
+            isOpenModal,
+            openModal,
+            setMessage,
+            dialogResult,
+            setOpenModal,
+          }}
         >
           <main>
             <Switch>
@@ -101,7 +120,7 @@ const App = observer(() => {
             closeModal={closeModal}
           />
         )}
-        {typeOfModal === "device" && <DeviceInfo />}
+        {typeOfModal === "device" && <DeviceInfo setOpenModal={setOpenModal} />}
       </Modal>
     </div>
   );

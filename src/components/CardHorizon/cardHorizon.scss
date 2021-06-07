@@ -38,6 +38,7 @@
     grid-area: footer;
     border-top: 1px solid var(--color-yellow);
     display: flex;
+    justify-content: space-between;
     padding: 10px;
     color: var(--color-white);
   }

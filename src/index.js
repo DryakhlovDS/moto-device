@@ -4,13 +4,16 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import UserStore, { UserContext } from "./store/UserStore";
+import DevicesStore, { DevicesContext } from "./store/DevicesStore";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <UserContext.Provider value={{ user: new UserStore() }}>
-        <App />
+        <DevicesContext.Provider value={{ devices: new DevicesStore() }}>
+          <App />
+        </DevicesContext.Provider>
       </UserContext.Provider>
     </Router>
   </React.StrictMode>,

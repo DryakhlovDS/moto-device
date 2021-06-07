@@ -6,6 +6,7 @@ import Basket from "./pages/basket";
 import Shop from "./pages/shop";
 import Stock from "./pages/lk/stock.jsx";
 import Graph from "./pages/lk/graph.jsx";
+import DeviceAdd from "./pages/lk/device.jsx";
 
 export const publicRoutes = [
   {
@@ -39,9 +40,21 @@ export const myRoom = [
         component: Stock,
       },
       {
+        path: "/lk/addDevice",
+        component: DeviceAdd,
+      },
+      {
+        path: "lk/addDevice/:id",
+        component: DeviceAdd,
+      },
+      {
         path: "/lk/pki",
         component: Stock,
       },
+      // {
+      //   path: "/lk/addPki",
+      //   component: PkiAdd,
+      // },
       {
         path: "/lk/graph",
         component: Graph,

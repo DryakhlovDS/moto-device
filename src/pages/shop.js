@@ -2,10 +2,12 @@ import "./shop.scss";
 import { Link } from "react-router-dom";
 // import deviceImg from "../static/device.jpg";
 import { DeviceContext } from "../store/store";
+import { DevicesContext } from "../store/DevicesStore";
 import { useContext } from "react";
 
 function Shop() {
-  const { devices, addToCart, buyNow } = useContext(DeviceContext);
+  const { addToCart, buyNow } = useContext(DeviceContext);
+  const { devices } = useContext(DevicesContext);
 
   return (
     <section className='shop'>
@@ -31,17 +33,20 @@ function Shop() {
               </div>
             </aside>
             <div className='shop__goods'>
-              {Object.values(devices).map((item, index) => {
+              {Object.values(devices.allDevices).map((item, index) => {
                 return (
                   <div className='card' key={index}>
                     <div className='card__image'>
-                      <img src={item.image} alt='device' />
+                      <img
+                        src={process.env.REACT_APP_API_URL + "/" + item.img}
+                        alt='device'
+                      />
                     </div>
                     <div className='card__header'>
                       <h3 className='card__title'>{item.name}</h3>
                     </div>
                     <div className='card__body'>
-                      <p>{item.description.short}</p>
+                      <p>{item.descriptionShort}</p>
                       <p>
                         <Link to={`/device/${item.id}`}>Подробнее</Link>
                       </p>

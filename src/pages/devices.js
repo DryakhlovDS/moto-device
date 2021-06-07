@@ -1,26 +1,29 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-// import deviceImg from "../static/device.jpg";
-import { DeviceContext } from "../store/store";
+import { DevicesContext } from "../store/DevicesStore";
+import { observer } from "mobx-react-lite";
 import "./devices.scss";
 
-function Devices() {
-  const { devices } = useContext(DeviceContext);
+const Devices = observer(() => {
+  const { devices } = useContext(DevicesContext);
   return (
     <section className='devices'>
       <div className='container'>
         <div className='devices__inner'>
           <h2>Устройства</h2>
-          {Object.values(devices).map(
-            ({ name, id, description, image: deviceImg }, index) => {
+          {Object.values(devices.allDevices).map(
+            ({ name, id, img, descriptionShort }, index) => {
               return (
                 <div className='devices__item' key={index}>
                   <div className='devices__image'>
-                    <img src={deviceImg} alt='device' />
+                    <img
+                      src={process.env.REACT_APP_API_URL + "/" + img}
+                      alt='device'
+                    />
                   </div>
                   <div className='devices__description'>
                     <h3>{name}</h3>
-                    <p>{description.short}</p>
+                    <p>{descriptionShort}</p>
                     <Link to={`/device/${id}`}>Подробнее</Link>
                   </div>
                 </div>
@@ -31,6 +34,6 @@ function Devices() {
       </div>
     </section>
   );
-}
+});
 
 export default Devices;
