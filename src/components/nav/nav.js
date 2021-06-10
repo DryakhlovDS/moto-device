@@ -2,11 +2,12 @@ import "./nav.scss";
 import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import { GoodsContext } from "../../store/store";
+import { BasketContext } from "../../store/BasketStore";
+import { observer } from "mobx-react-lite";
 
-function Nav() {
+const Nav = observer(() => {
   let { pathname } = useLocation();
-  const [goods] = useContext(GoodsContext);
+  const { basket } = useContext(BasketContext);
   return (
     <ul className='nav'>
       <li className={pathname === "/" ? "nav__active" : ""}>
@@ -21,11 +22,11 @@ function Nav() {
       <li className={pathname === "/basket" ? "nav__active" : ""}>
         <Link to='/basket'>
           <ShoppingCartIcon />
-          {!!goods.length && goods.length}
+          {!!basket.allDevices.length && basket.allDevices.length}
         </Link>
       </li>
     </ul>
   );
-}
+});
 
 export default Nav;

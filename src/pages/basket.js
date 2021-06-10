@@ -1,38 +1,44 @@
 import "./basket.scss";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { GoodsContext } from "../store/store";
-// import deviceImg from "../static/device.jpg";
+import { BasketContext } from "../store/BasketStore";
+import { DevicesContext } from "../store/DevicesStore";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import CardHorizon from "../components/CardHorizon/CardHorizon";
+import { observer } from "mobx-react-lite";
 
-function Basket() {
-  const [goods, setGoods] = useContext(GoodsContext);
-  const noGoods = !goods.length;
-  const totalCost = goods.reduce(
-    (acc, item) => item.count * item.price + acc,
+const Basket = observer(() => {
+  const { basket } = useContext(BasketContext);
+  const { devices } = useContext(DevicesContext);
+
+  const noGoods = !basket.allDevices.length;
+  const totalCost = basket.allDevices.reduce(
+    (acc, item) => item.count * devices.allDevices[item.id].price + acc,
     0
   );
-  const totalGoods = goods.reduce((acc, { count }) => acc + count, 0);
+  const totalGoods = basket.allDevices.reduce(
+    (acc, { count }) => acc + count,
+    0
+  );
   const changeCount = (idDevice, func) => {
-    const indexDevice = goods.findIndex((item) => item.id === idDevice);
+    const indexDevice = basket.allDevices.findIndex(
+      (item) => item.id === idDevice
+    );
     // eslint-disable-next-line default-case
     switch (func) {
       case "minus":
-        goods[indexDevice].count--;
+        basket.countDec(indexDevice);
         break;
       case "plus":
-        goods[indexDevice].count++;
+        basket.countInc(indexDevice);
         break;
     }
-    setGoods([...goods]);
   };
-  const deleteGoods = (idDevice) => {
-    const refreshGoods = goods.filter((item) => item.id !== idDevice);
-    setGoods(refreshGoods);
+  const deleteGood = (idDevice) => {
+    basket.deleteFromBasket(idDevice);
   };
   const deleteAllGoods = () => {
-    setGoods([]);
+    basket.clearBasket();
   };
   return (
     <section className='basket'>
@@ -59,8 +65,8 @@ function Basket() {
               </button>
             </aside>
             <div className='basket__goods'>
-              {goods.map((item, index) => (
-                <CardHorizon item={item} key={index}>
+              {basket.allDevices.map((item, index) => (
+                <CardHorizon item={devices.getDevice(item.id)} key={index}>
                   <div className='options'>
                     <label htmlFor='count'>Количество</label>
                     <div className='options__control'>
@@ -83,7 +89,7 @@ function Basket() {
                   </div>
                   <DeleteForeverIcon
                     className='icon-button'
-                    onClick={() => deleteGoods(item.id)}
+                    onClick={() => deleteGood(item.id)}
                   />
                 </CardHorizon>
               ))}
@@ -93,6 +99,6 @@ function Basket() {
       </div>
     </section>
   );
-}
+});
 
 export default Basket;

@@ -1,13 +1,26 @@
 import "./shop.scss";
-import { Link } from "react-router-dom";
-// import deviceImg from "../static/device.jpg";
-import { DeviceContext } from "../store/store";
+import { Link, useHistory } from "react-router-dom";
+import { BasketContext } from "../store/BasketStore";
 import { DevicesContext } from "../store/DevicesStore";
 import { useContext } from "react";
+import { observer } from "mobx-react-lite";
 
-function Shop() {
-  const { addToCart, buyNow } = useContext(DeviceContext);
+const Shop = observer(() => {
   const { devices } = useContext(DevicesContext);
+  const { basket } = useContext(BasketContext);
+  let history = useHistory();
+
+  const enableInBasket = (idDevice) =>
+    basket.allDevices.some((item) => item.id === idDevice);
+
+  const addToCart = (idDevice) => {
+    !enableInBasket(idDevice) && basket.saveInBasket(idDevice);
+  };
+
+  const buyNow = (idDevice) => {
+    addToCart(idDevice);
+    history.push("/basket");
+  };
 
   return (
     <section className='shop'>
@@ -58,8 +71,15 @@ function Shop() {
                         <button onClick={() => buyNow(item.id)}>
                           Купить сейчас
                         </button>
-                        <button onClick={() => addToCart(item.id)}>
-                          В Корзину
+                        <button
+                          onClick={() =>
+                            enableInBasket(item.id)
+                              ? buyNow(item.id)
+                              : addToCart(item.id)
+                          }
+                        >
+                          {enableInBasket(item.id) ? "Перейти " : "Добавить "} в
+                          Корзину
                         </button>
                       </div>
                     </div>
@@ -72,6 +92,6 @@ function Shop() {
       </div>
     </section>
   );
-}
+});
 
 export default Shop;

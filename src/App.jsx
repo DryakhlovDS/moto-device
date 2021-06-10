@@ -13,6 +13,7 @@ import DeviceInfo from "./components/DeviceInfo/deviceInfo";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
 import { getAllDevices } from "./http/deviceAPI";
+import BasketStore, { BasketContext } from "./store/BasketStore";
 
 const App = observer(() => {
   const { user } = useContext(UserContext);
@@ -32,12 +33,10 @@ const App = observer(() => {
     });
   }, []);
 
-  const [goods, setGoods] = useState([]);
   let [isOpenModal, setOpenModal] = useState(false);
   let [typeOfModal, setTypeOfModal] = useState("");
   let [message, setMessage] = useState({});
   const [dialogResult, setDialogResult] = useState("");
-  let history = useHistory();
 
   const admin = user.isAdmin;
   const openModal = (type) => {
@@ -51,34 +50,12 @@ const App = observer(() => {
     setMessage(message);
   };
 
-  const addToCart = (idDevice) => {
-    const enableInBasket = goods.some((item) => item.id === idDevice);
-    if (!enableInBasket) {
-      setGoods([...goods, Object.assign({}, devices[idDevice], { count: 1 })]);
-    } else {
-      setMessage({
-        title: "Внимание!",
-        text: "Этот товар уже в корзине!",
-        cancel: "",
-        ok: "Ok",
-      });
-      openModal("mess");
-    }
-  };
-
-  const buyNow = (idDevice) => {
-    addToCart(idDevice);
-    history.push("/basket");
-  };
-
   return (
     <div className='App'>
-      <GoodsContext.Provider value={[goods, setGoods]}>
+      <BasketContext.Provider value={{ basket: new BasketStore() }}>
         <Header openLogin={openModal} />
         <DeviceContext.Provider
           value={{
-            addToCart,
-            buyNow,
             isOpenModal,
             openModal,
             setMessage,
@@ -108,7 +85,7 @@ const App = observer(() => {
             </Switch>
           </main>
         </DeviceContext.Provider>
-      </GoodsContext.Provider>
+      </BasketContext.Provider>
       <Modal isOpen={isOpenModal} setOpenModal={setOpenModal}>
         {typeOfModal === "login" && <Login setOpenModal={setOpenModal} />}
         {typeOfModal === "mess" && (
