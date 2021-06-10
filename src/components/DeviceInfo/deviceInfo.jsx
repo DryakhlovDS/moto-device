@@ -1,5 +1,9 @@
 import "./deviceInfo.scss";
-import { createDevice, getOneDevice, updateDevice } from "../../http/deviceAPI";
+import {
+  createDevice,
+  fetchOneDevice,
+  updateDevice,
+} from "../../http/deviceAPI";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
@@ -10,7 +14,7 @@ function DeviceInfo() {
 
   useEffect(() => {
     if (id) {
-      getOneDevice(id).then((data) => {
+      fetchOneDevice(id).then((data) => {
         setDevice(data);
         setProps(data.props);
       });

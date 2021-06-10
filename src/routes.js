@@ -5,6 +5,7 @@ import Device from "./pages/device";
 import Basket from "./pages/basket";
 import Shop from "./pages/shop";
 import Stock from "./pages/lk/stock.jsx";
+import StockPki from "./pages/lk/StockPki.jsx";
 import Graph from "./pages/lk/graph.jsx";
 import DeviceAdd from "./pages/lk/device.jsx";
 
@@ -49,12 +50,8 @@ export const myRoom = [
       },
       {
         path: "/lk/pki",
-        component: Stock,
+        component: StockPki,
       },
-      // {
-      //   path: "/lk/addPki",
-      //   component: PkiAdd,
-      // },
       {
         path: "/lk/graph",
         component: Graph,

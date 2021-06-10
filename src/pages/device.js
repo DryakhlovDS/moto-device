@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DeviceContext } from "../store/store";
 import { DevicesContext } from "../store/DevicesStore";
-import { getOneDevice } from "../http/deviceAPI";
+import { fetchOneDevice } from "../http/deviceAPI";
 import { observer } from "mobx-react-lite";
 
 const Device = observer(() => {
@@ -13,7 +13,7 @@ const Device = observer(() => {
   const [device, setDevice] = useState({ props: [] });
 
   useEffect(() => {
-    getOneDevice(id).then((data) => {
+    fetchOneDevice(id).then((data) => {
       setDevice(data);
       devices.setDevice(data.id, data);
     });

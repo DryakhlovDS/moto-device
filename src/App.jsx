@@ -12,7 +12,7 @@ import Message from "./components/Message/Message.jsx";
 import DeviceInfo from "./components/DeviceInfo/deviceInfo";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
-import { getAllDevices } from "./http/deviceAPI";
+import { fetchAllDevices } from "./http/deviceAPI";
 import BasketStore, { BasketContext } from "./store/BasketStore";
 
 const App = observer(() => {
@@ -24,7 +24,7 @@ const App = observer(() => {
       user.setUser(data);
       user.setIsAuth(true);
     });
-    getAllDevices().then((data) => {
+    fetchAllDevices().then((data) => {
       const devs = {};
       data.forEach((device) => {
         devs[device.id] = device;

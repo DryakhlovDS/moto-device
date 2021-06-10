@@ -18,12 +18,12 @@ export const updateDevice = async (id, formData) => {
   console.log("upd device:", res);
 };
 
-export const getAllDevices = async () => {
+export const fetchAllDevices = async () => {
   const res = await $host.get("api/device");
   return res.data;
 };
 
-export const getOneDevice = async (id) => {
+export const fetchOneDevice = async (id) => {
   const res = await $host.get(`api/device/${id}`);
   return res.data;
 };

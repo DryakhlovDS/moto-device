@@ -5,19 +5,18 @@ import { useContext, useEffect, useState } from "react";
 import { DevicesContext } from "../../store/DevicesStore";
 import CardHorizon from "../../components/CardHorizon/CardHorizon.jsx";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { fetchAllDevices, deleteDevice } from "../../http/deviceAPI";
+import { fetchAllPki, deletePki } from "../../http/pkiAPI";
 import EditIcon from "@material-ui/icons/Edit";
 import { observer } from "mobx-react-lite";
 
-const Stock = observer(() => {
+const StockPki = observer(() => {
   const { isOpenModal, openModal, setMessage, dialogResult } =
     useContext(DeviceContext);
   const { devices } = useContext(DevicesContext);
   const [selected, setSelected] = useState("");
-  let history = useHistory();
 
   useEffect(() => {
-    fetchAllDevices().then((data) => {
+    fetchAllPki().then((data) => {
       const devs = {};
       data.forEach((device) => {
         devs[device.id] = device;
@@ -28,7 +27,7 @@ const Stock = observer(() => {
 
   useEffect(() => {
     if (dialogResult === "Удалить") {
-      deleteDevice(selected).then((res) => {
+      deletePki(selected).then((res) => {
         if (res === 200) {
           setMessage({
             title: "Успешно",
@@ -43,11 +42,11 @@ const Stock = observer(() => {
   }, [dialogResult]);
 
   const addDevice = () => {
-    history.push("/lk/addDevice");
+    console.log("add Pki");
   };
 
   const editDevice = (id) => {
-    history.push("/lk/addDevice/" + id);
+    console.log("edit Pki");
   };
 
   const openDialogToDelete = (id, name) => {
@@ -63,7 +62,7 @@ const Stock = observer(() => {
 
   return (
     <div className='stock'>
-      <h4 className='stock__title'>Устройства</h4>
+      <h4 className='stock__title'>ПКИ</h4>
       <Link to='/lk'>Назад</Link>
       <div className='stock__devices'>
         {Object.values(devices.allDevices).map((device) => (
@@ -88,4 +87,4 @@ const Stock = observer(() => {
   );
 });
 
-export default Stock;
+export default StockPki;
