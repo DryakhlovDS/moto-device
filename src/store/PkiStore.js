@@ -7,16 +7,16 @@ export default class PkiStore {
     makeAutoObservable(this);
   }
 
-  setAllPki(devices) {
-    this._devices = devices;
-  }
-
-  setPki(id, data) {
-    this._devices[id] = data;
+  setAllPki(pki) {
+    this._pki = { ...this._pki, ...pki };
   }
 
   get allPki() {
-    return this._devices;
+    return this._pki;
+  }
+
+  getOnePki(id) {
+    return this._pki[id];
   }
 }
 

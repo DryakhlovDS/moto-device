@@ -4,21 +4,35 @@ import {
   fetchOneDevice,
   updateDevice,
 } from "../../http/deviceAPI";
-import { useEffect, useState } from "react";
+import { fetchAllPki } from "../../http/pkiAPI";
+import { useEffect, useState, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import { PkiContext } from "../../store/PkiStore";
+import { observer } from "mobx-react-lite";
 
-function DeviceInfo() {
+const DeviceInfo = observer(() => {
   const [device, setDevice] = useState({});
   const [props, setProps] = useState([]);
+  const [devicePki, setDevicePki] = useState([]);
   const { id } = useParams();
+  const { pki } = useContext(PkiContext);
+  const allPki = pki.allPki;
 
   useEffect(() => {
     if (id) {
       fetchOneDevice(id).then((data) => {
         setDevice(data);
-        setProps(data.props);
+        data.props.length && setProps(data.props);
+        data.pki.length && setDevicePki(data.pki);
       });
     }
+    fetchAllPki().then((data) => {
+      const fetchPki = data.reduce((acc, item) => {
+        acc[item.name] = item;
+        return acc;
+      }, {});
+      pki.setAllPki(fetchPki);
+    });
   }, []);
 
   let history = useHistory();
@@ -26,7 +40,8 @@ function DeviceInfo() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newDevice = new FormData(e.target);
-    newDevice.append("props", JSON.stringify(props));
+    props.length && newDevice.append("props", JSON.stringify(props));
+    devicePki.length && newDevice.append("pki", JSON.stringify(devicePki));
     try {
       if (id) {
         await updateDevice(id, newDevice);
@@ -42,35 +57,45 @@ function DeviceInfo() {
   };
 
   const addProp = () => {
-    setProps([...props, { title: "", prop: "", prop_id: new Date() }]);
+    setProps([...props, { title: "", prop: "", id: new Date() }]);
   };
 
   const deleteProp = (prop_id) => {
-    setProps(props.filter((item) => item.prop_id !== prop_id));
+    setProps(props.filter((item) => item.id !== prop_id));
   };
 
   const changeProps = (key, value, prop_id) => {
     setProps(
       props.map((item) =>
-        item.prop_id === prop_id ? { ...item, [key]: value } : item
+        item.id === prop_id ? { ...item, [key]: value } : item
       )
     );
   };
 
+  const changePki = (key, value, prop_id) => {
+    setDevicePki(
+      devicePki.map((item) =>
+        item.id === prop_id ? { ...item, [key]: value } : item
+      )
+    );
+  };
+
+  const addPki = () => {
+    setDevicePki([...devicePki, { name: "", value: "", id: new Date() }]);
+  };
+
+  const deletePki = (prop_id) => {
+    setDevicePki(devicePki.filter((item) => item.id !== prop_id));
+  };
+
   return (
     <div className='info-device'>
-      <h3 className='info-device__title'>Добавить устройство</h3>
       <form
         name='deviceInfo'
         className='info-device__form'
         onSubmit={handleSubmit}
       >
         <fieldset>
-          {/* <legend>Наименование</legend> */}
-          {/* <div className='info-device__group'>
-            <label>ID:</label>
-            <input type='text' id='device_id' name='device_id' />
-          </div> */}
           <div className='info-device__group'>
             <label>Наименование:</label>
             <input
@@ -119,18 +144,20 @@ function DeviceInfo() {
           <button type='button' onClick={addProp}>
             Добавить характеристику
           </button>
-          {props.map(({ title, prop, prop_id }) => {
+          {props.map(({ title, prop, id }) => {
             return (
-              <div className='propsline' key={prop_id}>
+              <div className='propsline' key={id}>
                 <div className='propsline__group'>
                   <label>Характеристика:</label>
                   <input
                     type='text'
                     name='title'
                     defaultValue={title}
-                    onBlur={(e) =>
-                      changeProps("title", e.target.value, prop_id)
-                    }
+                    onBlur={(e) => {
+                      const val = e.target.value.trim();
+                      changeProps("title", val, id);
+                      e.target.value = val;
+                    }}
                   />
                 </div>
                 <div className='propsline__group'>
@@ -139,12 +166,16 @@ function DeviceInfo() {
                     type='text'
                     name='prop'
                     defaultValue={prop}
-                    onBlur={(e) => changeProps("prop", e.target.value, prop_id)}
+                    onBlur={(e) => {
+                      const val = e.target.value.trim();
+                      e.target.value = val;
+                      changeProps("prop", val, id);
+                    }}
                   />
                 </div>
                 <button
                   className='propsline__btn'
-                  onClick={() => deleteProp(prop_id)}
+                  onClick={() => deleteProp(id)}
                   type='button'
                 >
                   Удалить
@@ -153,11 +184,59 @@ function DeviceInfo() {
             );
           })}
         </fieldset>
-
+        <fieldset>
+          <legend>Комплектующие</legend>
+          <button type='button' onClick={addPki}>
+            Добавить компелктующее
+          </button>
+          {devicePki.map(({ name, value, id }) => {
+            return (
+              <div className='propsline' key={`${name}${id}`}>
+                <div className='propsline__group'>
+                  <label>Комплектующее:</label>
+                  <select
+                    name='pki_name'
+                    defaultValue='Выберите пункт меню'
+                    onChange={(e) => changePki("name", e.target.value, id)}
+                  >
+                    {Object.keys(pki.allPki).map((item) => {
+                      return (
+                        <option value={item} selected={item === name}>
+                          {item}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div className='propsline__group'>
+                  <label>Количество:</label>
+                  <input
+                    type='number'
+                    min='1'
+                    name='value'
+                    defaultValue={value}
+                    onBlur={(e) => {
+                      const val = e.target.value.trim();
+                      e.target.value = val;
+                      changePki("value", val, id);
+                    }}
+                  />
+                </div>
+                <button
+                  className='propsline__btn'
+                  onClick={() => deletePki(id)}
+                  type='button'
+                >
+                  Удалить
+                </button>
+              </div>
+            );
+          })}
+        </fieldset>
         <button type='submit'>Сохранить</button>
       </form>
     </div>
   );
-}
+});
 
 export default DeviceInfo;

@@ -6,7 +6,7 @@ export const createDevice = async (formData) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log("add device:", res);
+  return res.data;
 };
 
 export const updateDevice = async (id, formData) => {
@@ -15,7 +15,7 @@ export const updateDevice = async (id, formData) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log("upd device:", res);
+  return res.data;
 };
 
 export const fetchAllDevices = async () => {
@@ -30,5 +30,5 @@ export const fetchOneDevice = async (id) => {
 
 export const deleteDevice = async (id) => {
   const res = (await $authHost.delete(`api/device/${id}`)).status;
-  return res;
+  return res.data;
 };

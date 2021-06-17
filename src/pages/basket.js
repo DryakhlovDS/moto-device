@@ -1,17 +1,22 @@
 import "./basket.scss";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { BasketContext } from "../store/BasketStore";
+import { DeviceContext } from "../store/store";
 import { DevicesContext } from "../store/DevicesStore";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import CardHorizon from "../components/CardHorizon/CardHorizon";
 import { observer } from "mobx-react-lite";
+import { UserContext } from "../store/UserStore";
+import { buyDevices } from "../http/buyAPI";
 
 const Basket = observer(() => {
   const { basket } = useContext(BasketContext);
   const { devices } = useContext(DevicesContext);
+  const { user } = useContext(UserContext);
+  const { openModal } = useContext(DeviceContext);
 
-  const noGoods = !basket.allDevices.length;
+  const [noGoods, setNoGoods] = useState(!basket.allDevices.length);
   const totalCost = basket.allDevices.reduce(
     (acc, item) => item.count * devices.allDevices[item.id].price + acc,
     0
@@ -37,9 +42,19 @@ const Basket = observer(() => {
   const deleteGood = (idDevice) => {
     basket.deleteFromBasket(idDevice);
   };
+
   const deleteAllGoods = () => {
     basket.clearBasket();
   };
+
+  const buy = async () => {
+    const toBuy = { user_id: user.user.id, devices: basket.allDevices };
+    toBuy.devices.forEach((item) => (item.info = devices.getDevice(item.id)));
+    const res = await buyDevices(toBuy);
+    if (res.status === 200) deleteAllGoods();
+    console.log("Покупка", res);
+  };
+
   return (
     <section className='basket'>
       <div className='container'>
@@ -57,7 +72,11 @@ const Basket = observer(() => {
                 <h3 className='info__title'>В корзине </h3>
                 <p className='info__text'>{totalGoods} товаров</p>
                 <p className='info__text'>К оплате: {totalCost} рублей</p>
-                <button>оформить</button>
+                {user.isAuth ? (
+                  <button onClick={buy}>Оформить</button>
+                ) : (
+                  <button onClick={() => openModal("login")}>Войти</button>
+                )}
               </div>
 
               <button className='basket__btn' onClick={deleteAllGoods}>

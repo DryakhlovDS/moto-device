@@ -9,3 +9,8 @@ export const deletePki = async (id) => {
   const res = (await $authHost.delete(`api/pki/${id}`)).status;
   return res;
 };
+
+export const updatePki = async (formData) => {
+  const res = await $authHost.post("api/pki", formData);
+  return res;
+};

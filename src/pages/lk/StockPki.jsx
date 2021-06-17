@@ -1,29 +1,22 @@
-// import { useLocation } from "react-router";
 import { Link, useHistory } from "react-router-dom";
 import { DeviceContext } from "../../store/store";
 import { useContext, useEffect, useState } from "react";
-import { DevicesContext } from "../../store/DevicesStore";
-import CardHorizon from "../../components/CardHorizon/CardHorizon.jsx";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { fetchAllPki, deletePki } from "../../http/pkiAPI";
-import EditIcon from "@material-ui/icons/Edit";
+import { fetchAllPki, deletePki, updatePki } from "../../http/pkiAPI";
 import { observer } from "mobx-react-lite";
 
 const StockPki = observer(() => {
-  const { isOpenModal, openModal, setMessage, dialogResult } =
-    useContext(DeviceContext);
-  const { devices } = useContext(DevicesContext);
+  const { openModal, setMessage, dialogResult } = useContext(DeviceContext);
   const [selected, setSelected] = useState("");
+  const [pkiArray, setPkiArray] = useState([]);
+  let history = useHistory();
 
   useEffect(() => {
     fetchAllPki().then((data) => {
-      const devs = {};
-      data.forEach((device) => {
-        devs[device.id] = device;
-      });
-      devices.setAllDevices(devs);
+      data.forEach((item) => (item.disabled = true));
+      setPkiArray(data);
     });
-  }, [isOpenModal]);
+  }, []);
 
   useEffect(() => {
     if (dialogResult === "Удалить") {
@@ -31,22 +24,40 @@ const StockPki = observer(() => {
         if (res === 200) {
           setMessage({
             title: "Успешно",
-            text: `Устройство удалено`,
+            text: `Комплектующее удалено`,
             cancel: "",
             ok: "OK",
           });
+          setPkiArray(pkiArray.filter((item) => item.id !== selected));
           openModal("mess");
         }
       });
     }
   }, [dialogResult]);
 
-  const addDevice = () => {
-    console.log("add Pki");
+  const addPki = () => {
+    setPkiArray([
+      ...pkiArray,
+      { name: "", deliver: "", value: 0, id: new Date() },
+    ]);
   };
 
-  const editDevice = (id) => {
-    console.log("edit Pki");
+  const editPki = (id) => {
+    const editPki = pkiArray.map((item) =>
+      item.id === id ? { ...item, disabled: false } : item
+    );
+    setPkiArray(editPki);
+  };
+
+  const handleSavePki = async (e) => {
+    e.preventDefault();
+
+    const pkiToSave = pkiArray.filter((pki) => pki.name !== "");
+    let savePki = new FormData();
+    savePki.append("data", JSON.stringify(pkiToSave));
+    await updatePki(savePki);
+    e.target.reset();
+    history.push("/lk");
   };
 
   const openDialogToDelete = (id, name) => {
@@ -60,28 +71,89 @@ const StockPki = observer(() => {
     openModal("mess");
   };
 
+  const changeProps = (key, value, prop_id) => {
+    setPkiArray(
+      pkiArray.map((item) =>
+        item.id === prop_id ? { ...item, [key]: value } : item
+      )
+    );
+  };
+
   return (
     <div className='stock'>
       <h4 className='stock__title'>ПКИ</h4>
       <Link to='/lk'>Назад</Link>
-      <div className='stock__devices'>
-        {Object.values(devices.allDevices).map((device) => (
-          <CardHorizon item={device} key={device.id}>
-            <DeleteForeverIcon
-              className='icon-button'
-              onClick={() => openDialogToDelete(device.id, device.name)}
-            />
-            <EditIcon
-              className='icon-button'
-              onClick={() => editDevice(device.id)}
-            />
-          </CardHorizon>
-        ))}
-      </div>
-      <div className='stock__add'>
-        <button className='stock__btn' onClick={addDevice}>
-          Добавить устройство
-        </button>
+      <div className='stock__pki'>
+        <form className='table' onSubmit={handleSavePki}>
+          <fieldset>
+            <legend>Комплектующие</legend>
+            <div className='table__head'>
+              <p>№</p>
+              <p>Наименование</p>
+              <p>Срок доставки, дней</p>
+              <p>Количество, шт</p>
+            </div>
+            <ol>
+              {pkiArray.map((item) => (
+                <li key={item.name + item.id}>
+                  <div className='table__row'>
+                    <input
+                      type='text'
+                      name='name'
+                      defaultValue={item.name}
+                      onBlur={(e) => {
+                        const val = e.target.value.trim();
+                        e.target.value = val;
+                        changeProps("name", val, item.id);
+                      }}
+                      disabled={item.disabled}
+                    />
+                    <input
+                      type='text'
+                      name='deliver'
+                      defaultValue={item.deliver}
+                      onBlur={(e) => {
+                        const val = e.target.value.trim();
+                        e.target.value = val;
+                        changeProps("deliver", val, item.id);
+                      }}
+                      disabled={item.disabled}
+                    />
+                    <input
+                      type='number'
+                      name='value'
+                      defaultValue={item.value}
+                      min='0'
+                      onBlur={(e) => {
+                        const val = parseInt(e.target.value, 10);
+                        e.target.value = val;
+                        changeProps("value", val, item.id);
+                      }}
+                      disabled={item.disabled}
+                    />
+                    <button type='button' onClick={() => editPki(item.id)}>
+                      Редактировать
+                    </button>
+                    <DeleteForeverIcon
+                      className='icon-button'
+                      onClick={() => openDialogToDelete(item.id, item.name)}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div className='table__add'>
+              <button className='stock__btn' type='button' onClick={addPki}>
+                Добавить комплектующее
+              </button>
+            </div>
+          </fieldset>
+          <div className='table__save'>
+            <button className='stock__btn' type='submit'>
+              Сохранить
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

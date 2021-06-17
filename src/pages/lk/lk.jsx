@@ -10,7 +10,7 @@ function Lk() {
       <div className='container'>
         <h2 className='my-room__title'>Личный кабинет</h2>
         <div className='my-room__inner'>
-          <PkiContext.Provider value={{ basket: new PkiStore() }}>
+          <PkiContext.Provider value={{ pki: new PkiStore() }}>
             <Switch>
               <Route exact path={path}>
                 <MainLk />
@@ -45,7 +45,7 @@ function MainLk() {
           <Link to={`${url}/pki`}>ПКИ</Link>
         </li>
         <li>
-          <Link to={`${url}/graph`}>Графики</Link>
+          <Link to={`${url}/graph`}>Статистика</Link>
         </li>
       </ul>
     </>

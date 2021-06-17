@@ -1,8 +1,8 @@
 .auth {
   margin-top: 10px;
   padding: 10px;
-  width: 100%;
-  min-width: 450px;
+  width: 450px;
+  // min-width: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,5 +67,11 @@
       background: var(--color-yellow);
       color: var(--color-purple);
     }
+  }
+
+  &__helptext {
+    display: flex;
+    width: 100%;
+    color: var(--color-yellow);
   }
 }

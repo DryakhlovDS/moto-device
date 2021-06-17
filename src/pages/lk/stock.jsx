@@ -1,11 +1,13 @@
 // import { useLocation } from "react-router";
 import { Link, useHistory } from "react-router-dom";
 import { DeviceContext } from "../../store/store";
+import { PkiContext } from "../../store/PkiStore";
 import { useContext, useEffect, useState } from "react";
 import { DevicesContext } from "../../store/DevicesStore";
 import CardHorizon from "../../components/CardHorizon/CardHorizon.jsx";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { fetchAllDevices, deleteDevice } from "../../http/deviceAPI";
+import { fetchAllPki } from "../../http/pkiAPI";
 import EditIcon from "@material-ui/icons/Edit";
 import { observer } from "mobx-react-lite";
 
@@ -13,8 +15,19 @@ const Stock = observer(() => {
   const { isOpenModal, openModal, setMessage, dialogResult } =
     useContext(DeviceContext);
   const { devices } = useContext(DevicesContext);
+  const { pki } = useContext(PkiContext);
   const [selected, setSelected] = useState("");
   let history = useHistory();
+
+  useEffect(() => {
+    fetchAllPki().then((data) => {
+      const fetchPki = data.reduce((acc, item) => {
+        acc[item.name] = item;
+        return acc;
+      }, {});
+      pki.setAllPki(fetchPki);
+    });
+  }, []);
 
   useEffect(() => {
     fetchAllDevices().then((data) => {

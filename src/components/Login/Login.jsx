@@ -7,6 +7,7 @@ function Login({ setOpenModal }) {
   let [auth, setAuth] = useState("login");
   let [email, setEmail] = useState("");
   let [pass, setPass] = useState("");
+  let [isValidPass, setValid] = useState(false);
   const { user } = useContext(UserContext);
 
   const changeForm = (e) => {
@@ -18,17 +19,19 @@ function Login({ setOpenModal }) {
     e.preventDefault();
     try {
       let res;
+
       if (auth === "login") {
         res = await login(email, pass);
       } else {
-        res = await registration(email, pass);
+        if (isValidPass) res = await registration(email, pass);
       }
-      setEmail("");
-      setPass("");
-      e.target.reset();
-      user.setUser(res);
-      user.setIsAuth(true);
-      setOpenModal(false); //closeDialog();
+
+      if (res) {
+        e.target.reset();
+        user.setUser(res);
+        user.setIsAuth(true);
+        setOpenModal(false);
+      }
     } catch (error) {
       console.log(error.message || error);
     }
@@ -60,9 +63,18 @@ function Login({ setOpenModal }) {
         {auth === "reg" && (
           <fieldset>
             <label htmlFor='confirmPass'>Confirm password:</label>
-            <input type='password' id='confirmPass' />
+            <input
+              type='password'
+              id='confirmPass'
+              name='confirmPass'
+              onBlur={(e) => setValid(pass === e.target.value)}
+            />
+            {!isValidPass && pass && (
+              <p className='auth__helptext'>Пароль не совпадает</p>
+            )}
           </fieldset>
         )}
+
         <div className='auth__footer'>
           <>
             {auth === "login" ? "Нет аккаунта?" : "Уже есть аккаунт?"}
