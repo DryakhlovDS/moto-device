@@ -29,6 +29,6 @@ export const fetchOneDevice = async (id) => {
 };
 
 export const deleteDevice = async (id) => {
-  const res = (await $authHost.delete(`api/device/${id}`)).status;
-  return res.data;
+  const res = await $authHost.delete(`api/device/${id}`);
+  return res.status;
 };

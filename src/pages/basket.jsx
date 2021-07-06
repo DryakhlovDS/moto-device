@@ -16,7 +16,7 @@ const Basket = observer(() => {
   const { user } = useContext(UserContext);
   const { openModal } = useContext(DeviceContext);
 
-  const [noGoods, setNoGoods] = useState(!basket.allDevices.length);
+  const goods = basket.allDevices.length;
   const totalCost = basket.allDevices.reduce(
     (acc, item) => item.count * devices.allDevices[item.id].price + acc,
     0
@@ -60,12 +60,11 @@ const Basket = observer(() => {
       <div className='container'>
         <h2>Корзина</h2>
 
-        {noGoods && (
+        {!goods ? (
           <p>
             В корзине пока нет товаров! <Link to='/shop'>Выбрать товар</Link>
           </p>
-        )}
-        {!noGoods && (
+        ) : (
           <div className='basket__container'>
             <aside className='basket__menu'>
               <div className='info'>

@@ -228,3 +228,32 @@
     margin-top: 20px;
   }
 }
+
+.statistic {
+  &__table {
+    width: 100%;
+    color: var(--color-white);
+    border-collapse: collapse;
+    & td,
+    th {
+      padding: 5px;
+      border: 1px solid var(--color-yellow);
+
+      &:nth-child(1) {
+        width: 64px;
+      }
+      &:nth-child(2) {
+        width: 80px;
+      }
+      &:nth-child(3) {
+        width: calc(100% - 378px);
+      }
+      &:nth-child(4) {
+        min-width: 180px;
+      }
+      &:nth-child(5) {
+        width: 54px;
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./App.jsx";
 import UserStore, { UserContext } from "./store/UserStore";
 import DevicesStore, { DevicesContext } from "./store/DevicesStore";
+import BasketStore, { BasketContext } from "./store/BasketStore";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
@@ -12,7 +13,9 @@ ReactDOM.render(
     <Router>
       <UserContext.Provider value={{ user: new UserStore() }}>
         <DevicesContext.Provider value={{ devices: new DevicesStore() }}>
-          <App />
+          <BasketContext.Provider value={{ basket: new BasketStore() }}>
+            <App />
+          </BasketContext.Provider>
         </DevicesContext.Provider>
       </UserContext.Provider>
     </Router>

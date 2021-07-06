@@ -30,13 +30,14 @@ const Stock = observer(() => {
   }, []);
 
   useEffect(() => {
-    fetchAllDevices().then((data) => {
-      const devs = {};
-      data.forEach((device) => {
-        devs[device.id] = device;
+    !isOpenModal &&
+      fetchAllDevices().then((data) => {
+        const devs = {};
+        data.forEach((device) => {
+          devs[device.id] = device;
+        });
+        devices.setAllDevices(devs);
       });
-      devices.setAllDevices(devs);
-    });
   }, [isOpenModal]);
 
   useEffect(() => {

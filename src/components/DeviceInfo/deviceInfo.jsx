@@ -15,8 +15,8 @@ const DeviceInfo = observer(() => {
   const [props, setProps] = useState([]);
   const [devicePki, setDevicePki] = useState([]);
   const { id } = useParams();
-  const { pki } = useContext(PkiContext);
-  const allPki = pki.allPki;
+  const [allPki, setAllPki] = useState({});
+  let [inStockMax, setInStockMax] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -31,9 +31,13 @@ const DeviceInfo = observer(() => {
         acc[item.name] = item;
         return acc;
       }, {});
-      pki.setAllPki(fetchPki);
+      setAllPki(fetchPki);
     });
   }, []);
+
+  useEffect(() => {
+    computedInStock();
+  }, [devicePki, allPki]);
 
   let history = useHistory();
 
@@ -48,7 +52,7 @@ const DeviceInfo = observer(() => {
       } else {
         await createDevice(newDevice);
       }
-      // setOpenModal(false);
+
       e.target.reset();
       history.push("/lk/device");
     } catch (error) {
@@ -81,11 +85,26 @@ const DeviceInfo = observer(() => {
   };
 
   const addPki = () => {
-    setDevicePki([...devicePki, { name: "", value: "", id: new Date() }]);
+    setDevicePki([
+      ...devicePki,
+      { name: Object.keys(allPki)[0], value: "0", id: new Date() },
+    ]);
   };
 
   const deletePki = (prop_id) => {
     setDevicePki(devicePki.filter((item) => item.id !== prop_id));
+  };
+
+  const computedInStock = () => {
+    if (devicePki.length) {
+      const arr = devicePki.map((devPki) => {
+        const pkiValue = allPki[devPki.name] ? allPki[devPki.name].value : 0;
+        return Math.floor(pkiValue / devPki.value);
+      });
+      setInStockMax(Math.min(...arr));
+    } else {
+      setInStockMax(0);
+    }
   };
 
   return (
@@ -196,13 +215,16 @@ const DeviceInfo = observer(() => {
                   <label>Комплектующее:</label>
                   <select
                     name='pki_name'
-                    defaultValue='Выберите пункт меню'
                     onChange={(e) => changePki("name", e.target.value, id)}
                   >
-                    {Object.keys(pki.allPki).map((item) => {
+                    {Object.values(allPki).map((item) => {
                       return (
-                        <option value={item} selected={item === name}>
-                          {item}
+                        <option
+                          value={item.name}
+                          selected={item.name === name}
+                          key={item.name + item.id}
+                        >
+                          {item.name}
                         </option>
                       );
                     })}
@@ -232,6 +254,26 @@ const DeviceInfo = observer(() => {
               </div>
             );
           })}
+        </fieldset>
+        <fieldset>
+          <div className='info-device__group'>
+            <label>В наличии:</label>
+            <input
+              type='number'
+              id='inStock'
+              name='inStock'
+              defaultValue={
+                inStockMax < device.inStock ? inStockMax : device.inStock
+              }
+              max={inStockMax}
+              min='0'
+            />
+          </div>
+          <div className='info-device__group'>
+            <p>
+              Не более {inStockMax === Infinity ? "бесконечности" : inStockMax}
+            </p>
+          </div>
         </fieldset>
         <button type='submit'>Сохранить</button>
       </form>

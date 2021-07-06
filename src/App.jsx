@@ -13,7 +13,6 @@ import DeviceInfo from "./components/DeviceInfo/deviceInfo";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
 import { fetchAllDevices } from "./http/deviceAPI";
-import BasketStore, { BasketContext } from "./store/BasketStore";
 
 const App = observer(() => {
   const { user } = useContext(UserContext);
@@ -52,40 +51,38 @@ const App = observer(() => {
 
   return (
     <div className='App'>
-      <BasketContext.Provider value={{ basket: new BasketStore() }}>
-        <Header openLogin={openModal} />
-        <DeviceContext.Provider
-          value={{
-            isOpenModal,
-            openModal,
-            setMessage,
-            dialogResult,
-            setOpenModal,
-          }}
-        >
-          <main>
-            <Switch>
-              {publicRoutes.map((item, index) => (
+      <Header openLogin={openModal} />
+      <DeviceContext.Provider
+        value={{
+          isOpenModal,
+          openModal,
+          setMessage,
+          dialogResult,
+          setOpenModal,
+        }}
+      >
+        <main>
+          <Switch>
+            {publicRoutes.map((item, index) => (
+              <Route
+                key={index}
+                path={item.path}
+                component={item.component}
+                exact
+              />
+            ))}
+            {admin &&
+              myRoom.map((item, index) => (
                 <Route
-                  key={index}
+                  key={index + 100}
                   path={item.path}
                   component={item.component}
-                  exact
                 />
               ))}
-              {admin &&
-                myRoom.map((item, index) => (
-                  <Route
-                    key={index + 100}
-                    path={item.path}
-                    component={item.component}
-                  />
-                ))}
-              <Redirect to='/' />
-            </Switch>
-          </main>
-        </DeviceContext.Provider>
-      </BasketContext.Provider>
+            <Redirect to='/' />
+          </Switch>
+        </main>
+      </DeviceContext.Provider>
       <Modal isOpen={isOpenModal} setOpenModal={setOpenModal}>
         {typeOfModal === "login" && <Login setOpenModal={setOpenModal} />}
         {typeOfModal === "mess" && (

@@ -1,16 +1,17 @@
 import "./device.scss";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { DeviceContext } from "../store/store";
+import { useParams, useHistory } from "react-router-dom";
+import { BasketContext } from "../store/BasketStore";
 import { DevicesContext } from "../store/DevicesStore";
 import { fetchOneDevice } from "../http/deviceAPI";
 import { observer } from "mobx-react-lite";
 
 const Device = observer(() => {
-  const { addToCart, buyNow } = useContext(DeviceContext);
   const { devices } = useContext(DevicesContext);
+  const { basket } = useContext(BasketContext);
   const { id } = useParams();
   const [device, setDevice] = useState({ props: [] });
+  let history = useHistory();
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => {
@@ -18,6 +19,18 @@ const Device = observer(() => {
       devices.setDevice(data.id, data);
     });
   }, []);
+
+  const enableInBasket = (idDevice) =>
+    basket.allDevices.some((item) => item.id === idDevice);
+
+  const addToCart = (idDevice) => {
+    !enableInBasket(idDevice) && basket.saveInBasket(idDevice);
+  };
+
+  const buyNow = (idDevice) => {
+    addToCart(idDevice);
+    history.push("/basket");
+  };
 
   return (
     <section className='device'>
@@ -50,11 +63,11 @@ const Device = observer(() => {
           <p> В наличии: {device.inStock} шт.</p>
           <p> Стоимость: {device.price} руб.</p>
           <div className='device__links'>
-            <button type='button' onClick={() => buyNow(device.id)}>
+            <button type='button' onClick={() => buyNow(id)}>
               Купить сейчас
             </button>
-            <button type='button' onClick={() => addToCart(device.id)}>
-              В Корзину
+            <button type='button' onClick={() => addToCart(id)}>
+              {enableInBasket(id) ? "Перейти " : "Добавить "} в корзину
             </button>
           </div>
         </div>
