@@ -3,16 +3,17 @@ import { useContext, useState, useEffect } from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import { myRoom, publicRoutes } from "./routes";
 import Header from "./components/header/header";
-import { DeviceContext, devices, GoodsContext } from "./store/store";
+import { DeviceContext } from "./store/store";
 import { UserContext } from "./store/UserStore";
 import { DevicesContext } from "./store/DevicesStore";
 import Modal from "./components/modal/modal.jsx";
 import Login from "./components/Login/Login.jsx";
 import Message from "./components/Message/Message.jsx";
-import DeviceInfo from "./components/DeviceInfo/deviceInfo";
+import DeviceCard from "./components/DeviceCard/DeviceCard";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
 import { fetchAllDevices } from "./http/deviceAPI";
+import { fetchAllTypes } from "./http/typeAPI";
 
 const App = observer(() => {
   const { user } = useContext(UserContext);
@@ -30,6 +31,14 @@ const App = observer(() => {
       });
       devices.setAllDevices(devs);
     });
+    fetchAllTypes().then((data) => {
+      devices.setTypes(
+        data.reduce((acc, type) => {
+          acc[type.id] = type.name;
+          return acc;
+        }, {})
+      );
+    });
   }, []);
 
   let [isOpenModal, setOpenModal] = useState(false);
@@ -38,6 +47,7 @@ const App = observer(() => {
   const [dialogResult, setDialogResult] = useState("");
 
   const admin = user.isAdmin;
+
   const openModal = (type) => {
     setTypeOfModal(type);
     setOpenModal(true);
@@ -94,7 +104,9 @@ const App = observer(() => {
             closeModal={closeModal}
           />
         )}
-        {typeOfModal === "device" && <DeviceInfo setOpenModal={setOpenModal} />}
+        {typeOfModal === "device" && (
+          <DeviceCard setOpenModal={setOpenModal} device={devices.showDevice} />
+        )}
       </Modal>
     </div>
   );

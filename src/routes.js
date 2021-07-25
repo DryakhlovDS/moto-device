@@ -8,6 +8,7 @@ import Stock from "./pages/lk/stock.jsx";
 import StockPki from "./pages/lk/StockPki.jsx";
 import Graph from "./pages/lk/graph.jsx";
 import DeviceAdd from "./pages/lk/device.jsx";
+import Type from "./pages/lk/type.jsx";
 
 export const publicRoutes = [
   {
@@ -55,6 +56,10 @@ export const myRoom = [
       {
         path: "/lk/graph",
         component: Graph,
+      },
+      {
+        path: "/lk/type",
+        component: Type,
       },
     ],
   },

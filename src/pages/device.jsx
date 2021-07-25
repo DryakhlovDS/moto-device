@@ -31,7 +31,7 @@ const Device = observer(() => {
     addToCart(idDevice);
     history.push("/basket");
   };
-
+  console.log(device);
   return (
     <section className='device'>
       <div className='container'>
@@ -41,6 +41,12 @@ const Device = observer(() => {
             src={process.env.REACT_APP_API_URL + "/" + device.img}
             alt='device'
           />
+          {device.photos.map((img) => (
+            <img
+              src={`${process.env.REACT_APP_API_URL}/${device.name}/${img}`}
+              alt={device.name}
+            />
+          ))}
           <p>{device.descriptionFull}</p>
           <table className='device__props'>
             <thead>
@@ -60,6 +66,7 @@ const Device = observer(() => {
               })}
             </tbody>
           </table>
+          <p>Тип мотоцикла: {devices.getType(device.typeId)}</p>
           <p> В наличии: {device.inStock} шт.</p>
           <p> Стоимость: {device.price} руб.</p>
           <div className='device__links'>

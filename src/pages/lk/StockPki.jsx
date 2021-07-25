@@ -38,7 +38,7 @@ const StockPki = observer(() => {
   const addPki = () => {
     setPkiArray([
       ...pkiArray,
-      { name: "", deliver: "", value: 0, id: new Date() },
+      { name: "", deliver: "", value: 0, id: new Date(), disabled: false },
     ]);
   };
 
@@ -52,7 +52,9 @@ const StockPki = observer(() => {
   const handleSavePki = async (e) => {
     e.preventDefault();
 
-    const pkiToSave = pkiArray.filter((pki) => pki.name !== "");
+    const pkiToSave = pkiArray
+      .filter((pki) => pki.name !== "")
+      .filter((pki) => pki.disabled === false);
     let savePki = new FormData();
     savePki.append("data", JSON.stringify(pkiToSave));
     await updatePki(savePki);
@@ -91,7 +93,8 @@ const StockPki = observer(() => {
               <p>№</p>
               <p>Наименование</p>
               <p>Срок доставки, дней</p>
-              <p>Количество, шт</p>
+              <p>Количество всего, шт</p>
+              <p>Количество свободных, шт</p>
             </div>
             <ol>
               {pkiArray.map((item) => (
@@ -130,6 +133,13 @@ const StockPki = observer(() => {
                         changeProps("value", val, item.id);
                       }}
                       disabled={item.disabled}
+                    />
+                    <input
+                      type='number'
+                      name='free'
+                      defaultValue={item.free}
+                      min='0'
+                      disabled
                     />
                     <button type='button' onClick={() => editPki(item.id)}>
                       Редактировать

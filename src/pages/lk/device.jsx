@@ -1,7 +1,6 @@
 import "./lk.scss";
 import DeviceInfo from "../../components/DeviceInfo/deviceInfo.jsx";
 import { Route, Switch, Link, useRouteMatch } from "react-router-dom";
-import { observer } from "mobx-react-lite";
 
 const DeviceAdd = () => {
   let match = useRouteMatch("/lk/addDevice/:id");

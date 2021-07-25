@@ -5,9 +5,10 @@ import {
   updateDevice,
 } from "../../http/deviceAPI";
 import { fetchAllPki } from "../../http/pkiAPI";
+import { fetchAllTypes } from "../../http/typeAPI";
 import { useEffect, useState, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { PkiContext } from "../../store/PkiStore";
+// import { PkiContext } from "../../store/PkiStore";
 import { observer } from "mobx-react-lite";
 
 const DeviceInfo = observer(() => {
@@ -16,7 +17,9 @@ const DeviceInfo = observer(() => {
   const [devicePki, setDevicePki] = useState([]);
   const { id } = useParams();
   const [allPki, setAllPki] = useState({});
+  const [allTypes, setAllTypes] = useState({});
   let [inStockMax, setInStockMax] = useState(0);
+  const [morePhoto, setMorePhoto] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -32,6 +35,9 @@ const DeviceInfo = observer(() => {
         return acc;
       }, {});
       setAllPki(fetchPki);
+    });
+    fetchAllTypes().then((data) => {
+      setAllTypes(data);
     });
   }, []);
 
@@ -98,7 +104,7 @@ const DeviceInfo = observer(() => {
   const computedInStock = () => {
     if (devicePki.length) {
       const arr = devicePki.map((devPki) => {
-        const pkiValue = allPki[devPki.name] ? allPki[devPki.name].value : 0;
+        const pkiValue = allPki[devPki.name] ? allPki[devPki.name].free : 0;
         return Math.floor(pkiValue / devPki.value);
       });
       setInStockMax(Math.min(...arr));
@@ -157,6 +163,14 @@ const DeviceInfo = observer(() => {
         <fieldset>
           <label>Изображение:</label>
           <input type='file' id='image' name='image' />
+          {morePhoto && (
+            <input type='file' id='photos' name='photos' multiple />
+          )}
+          <div className='propsline' key={id}>
+            <button type='button' onClick={() => setMorePhoto(!morePhoto)}>
+              {morePhoto ? "Меньше" : "Больше"} фото
+            </button>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Характеристики</legend>
@@ -256,16 +270,35 @@ const DeviceInfo = observer(() => {
           })}
         </fieldset>
         <fieldset>
+          <legend>Тип</legend>
+          <div className='propsline'>
+            <div className='propsline__group'>
+              <select name='typeId'>
+                {allTypes.length &&
+                  allTypes.map((item) => {
+                    return (
+                      <option
+                        value={item.id}
+                        selected={item.id === device.typeId}
+                        key={item.name + item.id}
+                      >
+                        {item.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
           <div className='info-device__group'>
             <label>В наличии:</label>
             <input
               type='number'
               id='inStock'
               name='inStock'
-              defaultValue={
-                inStockMax < device.inStock ? inStockMax : device.inStock
-              }
-              max={inStockMax}
+              defaultValue={device.inStock}
+              max={device.inStock > inStockMax ? device.inStock : inStockMax}
               min='0'
             />
           </div>
