@@ -41,12 +41,14 @@ const Device = observer(() => {
             src={process.env.REACT_APP_API_URL + "/" + device.img}
             alt='device'
           />
-          {device.photos.map((img) => (
-            <img
-              src={`${process.env.REACT_APP_API_URL}/${device.name}/${img}`}
-              alt={device.name}
-            />
-          ))}
+          {device &&
+            device.photos.length &&
+            device.photos.map((img) => (
+              <img
+                src={`${process.env.REACT_APP_API_URL}/${device.name}/${img}`}
+                alt={device.name}
+              />
+            ))}
           <p>{device.descriptionFull}</p>
           <table className='device__props'>
             <thead>
