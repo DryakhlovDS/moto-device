@@ -41,7 +41,7 @@ const Device = observer(() => {
             src={process.env.REACT_APP_API_URL + "/" + device.img}
             alt='device'
           />
-          {device &&
+          {device.photos &&
             device.photos.length &&
             device.photos.map((img) => (
               <img
