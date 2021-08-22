@@ -1,6 +1,6 @@
 import "./App.scss";
 import { useContext, useState, useEffect } from "react";
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { myRoom, publicRoutes } from "./routes";
 import Header from "./components/header/header";
 import { DeviceContext } from "./store/store";
@@ -13,7 +13,7 @@ import DeviceCard from "./components/DeviceCard/DeviceCard";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
 import { fetchAllDevices } from "./http/deviceAPI";
-import { fetchAllTypes } from "./http/typeAPI";
+import { fetchAllBrands } from "./http/brandAPI";
 
 const App = observer(() => {
   const { user } = useContext(UserContext);
@@ -31,10 +31,10 @@ const App = observer(() => {
       });
       devices.setAllDevices(devs);
     });
-    fetchAllTypes().then((data) => {
-      devices.setTypes(
-        data.reduce((acc, type) => {
-          acc[type.id] = type.name;
+    fetchAllBrands().then((data) => {
+      devices.setBrands(
+        data.reduce((acc, brand) => {
+          acc[brand.id] = brand.name;
           return acc;
         }, {})
       );

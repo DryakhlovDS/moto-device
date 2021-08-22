@@ -15,7 +15,7 @@ const Shop = observer(() => {
 
   let [filterString, setFilterString] = useState("");
   let [filterInStock, setFilterInStock] = useState(false);
-  let [filterTypes, setFilterTypes] = useState([]);
+  let [filterBrands, setFilterBrands] = useState([]);
 
   const enableInBasket = (idDevice) =>
     basket.allDevices.some((item) => item.id === idDevice);
@@ -40,19 +40,19 @@ const Shop = observer(() => {
 
     if (filterInStock)
       filterResult = filterResult.filter((device) => device.inStock > 0);
-    if (filterTypes.length) {
+    if (filterBrands.length) {
       filterResult = filterResult.filter((device) =>
-        filterTypes.includes(`${device.typeId}`)
+        filterBrands.includes(`${device.brandId}`)
       );
     }
     setDevicesInShop(filterResult);
   };
 
-  const changeFilterType = (type) => {
-    if (filterTypes.includes(type)) {
-      setFilterTypes(filterTypes.filter((item) => item !== type));
+  const changeFilterBrand = (brand) => {
+    if (filterBrands.includes(brand)) {
+      setFilterBrands(filterBrands.filter((item) => item !== brand));
     } else {
-      setFilterTypes([...filterTypes, type]);
+      setFilterBrands([...filterBrands, brand]);
     }
   };
 
@@ -87,18 +87,18 @@ const Shop = observer(() => {
                     />
                     <label htmlFor='inStock'>В наличии</label>
                   </div>
-                  <p>По типу:</p>
-                  {devices.allTypes.map((type) => {
+                  <p>По марке:</p>
+                  {devices.allBrands.map((brand) => {
                     return (
-                      <div className='filter__group'>
+                      <div className='filter__group' key={brand[1]}>
                         <input
                           type='checkbox'
-                          id={`type_${type[0]}`}
-                          name={type[1]}
-                          checked={filterTypes.includes(type[0])}
-                          onChange={() => changeFilterType(type[0])}
+                          id={`brand_${brand[0]}`}
+                          name={brand[1]}
+                          checked={filterBrands.includes(brand[0])}
+                          onChange={() => changeFilterBrand(brand[0])}
                         />
-                        <label htmlFor={`type_${type[0]}`}>{type[1]}</label>
+                        <label htmlFor={`brand_${brand[0]}`}>{brand[1]}</label>
                       </div>
                     );
                   })}

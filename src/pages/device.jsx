@@ -84,7 +84,7 @@ const Device = observer(() => {
               })}
             </tbody>
           </table>
-          <p>Тип мотоцикла: {devices.getType(device.typeId)}</p>
+          <p>Марка мотоцикла: {devices.getBrand(device.brandId)}</p>
           <p> В наличии: {device.inStock} шт.</p>
           <p> Стоимость: {device.price} руб.</p>
           <div className='device__links'>

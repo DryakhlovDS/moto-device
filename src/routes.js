@@ -1,35 +1,49 @@
 import Lk from "./pages/lk/lk.jsx";
-import Main from "./pages/main.jsx";
-import Devices from "./pages/devices.jsx";
 import Device from "./pages/device.jsx";
 import Basket from "./pages/basket.jsx";
 import Shop from "./pages/shop.jsx";
+import About from "./pages/about.jsx";
+import Contacts from "./pages/contacts.jsx";
+import Pay from "./pages/pay.jsx";
+import UserInfo from "./pages/userInfo.jsx";
 import Stock from "./pages/lk/stock.jsx";
 import StockPki from "./pages/lk/StockPki.jsx";
 import Graph from "./pages/lk/graph.jsx";
 import DeviceAdd from "./pages/lk/device.jsx";
-import Type from "./pages/lk/type.jsx";
+import Brand from "./pages/lk/brand.jsx";
 
 export const publicRoutes = [
-  {
-    path: "/",
-    component: Main,
-  },
-  {
-    path: "/device",
-    component: Devices,
-  },
+  // {
+  //   path: "/",
+  //   component: Main,
+  // },
   {
     path: "/device/:id",
     component: Device,
   },
   {
-    path: "/shop",
+    path: "/",
     component: Shop,
   },
   {
     path: "/basket",
     component: Basket,
+  },
+  {
+    path: "/about",
+    component: About,
+  },
+  {
+    path: "/contacts",
+    component: Contacts,
+  },
+  {
+    path: "/pay",
+    component: Pay,
+  },
+  {
+    path: "/user/:nickname",
+    component: UserInfo,
   },
 ];
 export const myRoom = [
@@ -58,8 +72,8 @@ export const myRoom = [
         component: Graph,
       },
       {
-        path: "/lk/type",
-        component: Type,
+        path: "/lk/brand",
+        component: Brand,
       },
     ],
   },

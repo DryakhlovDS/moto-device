@@ -9,6 +9,7 @@ function Login({ setOpenModal }) {
   let [pass, setPass] = useState("");
   let [isValidPass, setValid] = useState(false);
   const { user } = useContext(UserContext);
+  const [errorStr, setErrorStr] = useState("");
 
   const changeForm = (e) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ function Login({ setOpenModal }) {
       } else {
         if (isValidPass) res = await registration(email, pass);
       }
-
+      console.log("res:", res.message);
       if (res) {
         e.target.reset();
         user.setUser(res);
@@ -33,7 +34,9 @@ function Login({ setOpenModal }) {
         setOpenModal(false);
       }
     } catch (error) {
-      console.log(error.message || error);
+      console.log(error.response.status);
+      console.log(error.response.data.message);
+      setErrorStr(error.response.data.message);
     }
   };
   return (
@@ -74,7 +77,7 @@ function Login({ setOpenModal }) {
             )}
           </fieldset>
         )}
-
+        {errorStr && <p>{errorStr}</p>}
         <div className='auth__footer'>
           <>
             {auth === "login" ? "Нет аккаунта?" : "Уже есть аккаунт?"}

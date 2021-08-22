@@ -24,3 +24,8 @@ export const check = async () => {
   data && data.token && localStorage.setItem("token", data.token);
   return jwt_decode(data.token);
 };
+
+export const fetchUserInfo = async (id) => {
+  const { data } = await $authHost.get("api/userInfo/" + id);
+  return data;
+};

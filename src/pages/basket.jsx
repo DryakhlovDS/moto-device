@@ -1,6 +1,6 @@
 import "./basket.scss";
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { BasketContext } from "../store/BasketStore";
 import { DeviceContext } from "../store/store";
 import { DevicesContext } from "../store/DevicesStore";
@@ -83,34 +83,37 @@ const Basket = observer(() => {
               </button>
             </aside>
             <div className='basket__goods'>
-              {basket.allDevices.map((item, index) => (
-                <CardHorizon item={devices.getDevice(item.id)} key={index}>
-                  <div className='options'>
-                    <label htmlFor='count'>Количество</label>
-                    <div className='options__control'>
-                      <button
-                        className='options__btn'
-                        onClick={() => changeCount(item.id, "minus")}
-                        disabled={item.count < 2}
-                      >
-                        -
-                      </button>
-                      <output name='count'>{item.count}</output>
-                      <button
-                        className='options__btn'
-                        onClick={() => changeCount(item.id, "plus")}
-                        disabled={item.count === item.inStock}
-                      >
-                        +
-                      </button>
+              {basket.allDevices.map((item, index) => {
+                const device = devices.getDevice(item.id);
+                return (
+                  <CardHorizon item={device} key={index}>
+                    <div className='options'>
+                      <label htmlFor='count'>Количество</label>
+                      <div className='options__control'>
+                        <button
+                          className='options__btn'
+                          onClick={() => changeCount(item.id, "minus")}
+                          disabled={item.count < 2}
+                        >
+                          -
+                        </button>
+                        <output name='count'>{item.count}</output>
+                        <button
+                          className='options__btn'
+                          onClick={() => changeCount(item.id, "plus")}
+                          disabled={item.count === device.inStock}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <DeleteForeverIcon
-                    className='icon-button'
-                    onClick={() => deleteGood(item.id)}
-                  />
-                </CardHorizon>
-              ))}
+                    <DeleteForeverIcon
+                      className='icon-button'
+                      onClick={() => deleteGood(item.id)}
+                    />
+                  </CardHorizon>
+                );
+              })}
             </div>
           </div>
         )}

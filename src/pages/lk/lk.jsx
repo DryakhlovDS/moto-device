@@ -48,7 +48,7 @@ function MainLk() {
           <Link to={`${url}/graph`}>Статистика</Link>
         </li>
         <li>
-          <Link to={`${url}/type`}>Тип</Link>
+          <Link to={`${url}/brand`}>Марка</Link>
         </li>
       </ul>
     </>

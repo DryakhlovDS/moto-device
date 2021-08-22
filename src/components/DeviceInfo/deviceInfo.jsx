@@ -5,8 +5,8 @@ import {
   updateDevice,
 } from "../../http/deviceAPI";
 import { fetchAllPki } from "../../http/pkiAPI";
-import { fetchAllTypes } from "../../http/typeAPI";
-import { useEffect, useState, useContext } from "react";
+import { fetchAllBrands } from "../../http/brandAPI";
+import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 // import { PkiContext } from "../../store/PkiStore";
 import { observer } from "mobx-react-lite";
@@ -17,7 +17,7 @@ const DeviceInfo = observer(() => {
   const [devicePki, setDevicePki] = useState([]);
   const { id } = useParams();
   const [allPki, setAllPki] = useState({});
-  const [allTypes, setAllTypes] = useState({});
+  const [allBrands, setAllBrands] = useState({});
   let [inStockMax, setInStockMax] = useState(0);
   const [morePhoto, setMorePhoto] = useState(false);
 
@@ -36,8 +36,8 @@ const DeviceInfo = observer(() => {
       }, {});
       setAllPki(fetchPki);
     });
-    fetchAllTypes().then((data) => {
-      setAllTypes(data);
+    fetchAllBrands().then((data) => {
+      setAllBrands(data);
     });
   }, []);
 
@@ -270,16 +270,16 @@ const DeviceInfo = observer(() => {
           })}
         </fieldset>
         <fieldset>
-          <legend>Тип</legend>
+          <legend>Марка</legend>
           <div className='propsline'>
             <div className='propsline__group'>
-              <select name='typeId'>
-                {allTypes.length &&
-                  allTypes.map((item) => {
+              <select name='brandId'>
+                {allBrands.length &&
+                  allBrands.map((item) => {
                     return (
                       <option
                         value={item.id}
-                        selected={item.id === device.typeId}
+                        selected={item.id === device.brandId}
                         key={item.name + item.id}
                       >
                         {item.name}
