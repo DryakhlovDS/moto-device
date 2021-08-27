@@ -4,7 +4,7 @@ import { makeAutoObservable } from "mobx";
 export default class DeviceStore {
   constructor() {
     this._devices = {};
-    this._types = {};
+    this._brands = {};
     this._showDevice = {};
     makeAutoObservable(this);
   }
@@ -25,15 +25,15 @@ export default class DeviceStore {
     return this._devices[id];
   }
 
-  setTypes(types) {
-    this._types = types;
+  setBrands(brands) {
+    this._brands = brands;
   }
 
-  getType(id) {
-    return this._types[id];
+  getBrand(id) {
+    return this._brands[id];
   }
-  get allTypes() {
-    return Object.entries(this._types);
+  get allBrands() {
+    return Object.entries(this._brands);
   }
 
   setShowDevice(device) {

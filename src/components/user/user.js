@@ -12,9 +12,13 @@ function User() {
     user.setIsAuth(false);
     localStorage.removeItem("token");
   };
+
+  console.log("nick:", user.user.nickname);
   return (
     <div className='user'>
-      <p className='user__name'>{user.user.email}</p>
+      <Link className='user__name' to={`/user/${user.user.nickname}`}>
+        {user.user.email}
+      </Link>
       {isAdmin && (
         <Link className='user__link' to='/lk'>
           ЛК

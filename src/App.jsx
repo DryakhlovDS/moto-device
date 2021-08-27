@@ -1,6 +1,6 @@
 import "./App.scss";
 import { useContext, useState, useEffect } from "react";
-import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { myRoom, publicRoutes } from "./routes";
 import Header from "./components/header/header";
 import { DeviceContext } from "./store/store";
@@ -10,10 +10,11 @@ import Modal from "./components/modal/modal.jsx";
 import Login from "./components/Login/Login.jsx";
 import Message from "./components/Message/Message.jsx";
 import DeviceCard from "./components/DeviceCard/DeviceCard";
+import UserInfoCard from "./components/UserInfoCard/UserInfoCard";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
 import { fetchAllDevices } from "./http/deviceAPI";
-import { fetchAllTypes } from "./http/typeAPI";
+import { fetchAllBrands } from "./http/brandAPI";
 
 const App = observer(() => {
   const { user } = useContext(UserContext);
@@ -31,10 +32,10 @@ const App = observer(() => {
       });
       devices.setAllDevices(devs);
     });
-    fetchAllTypes().then((data) => {
-      devices.setTypes(
-        data.reduce((acc, type) => {
-          acc[type.id] = type.name;
+    fetchAllBrands().then((data) => {
+      devices.setBrands(
+        data.reduce((acc, brand) => {
+          acc[brand.id] = brand.name;
           return acc;
         }, {})
       );
@@ -56,7 +57,7 @@ const App = observer(() => {
   const closeModal = (value) => {
     setOpenModal(false);
     setDialogResult(value);
-    setMessage(message);
+    // setMessage(message);
   };
 
   return (
@@ -106,6 +107,13 @@ const App = observer(() => {
         )}
         {typeOfModal === "device" && (
           <DeviceCard setOpenModal={setOpenModal} device={devices.showDevice} />
+        )}
+        {typeOfModal === "userInfo" && (
+          <UserInfoCard
+            setOpenModal={setOpenModal}
+            userInfo={user}
+            closeModal={closeModal}
+          />
         )}
       </Modal>
     </div>

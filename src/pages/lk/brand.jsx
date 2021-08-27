@@ -2,25 +2,25 @@ import { Link, useHistory } from "react-router-dom";
 import { DeviceContext } from "../../store/store";
 import { useContext, useEffect, useState } from "react";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { fetchAllTypes, deleteType, updateType } from "../../http/typeAPI";
+import { fetchAllBrands, deleteBrand, updateBrand } from "../../http/brandAPI";
 import { observer } from "mobx-react-lite";
 
-const Type = observer(() => {
+const Brand = observer(() => {
   const { openModal, setMessage, dialogResult } = useContext(DeviceContext);
   const [selected, setSelected] = useState("");
-  const [typeArray, setTypeArray] = useState([]);
+  const [brandArray, setBrandArray] = useState([]);
   let history = useHistory();
 
   useEffect(() => {
-    fetchAllTypes().then((data) => {
+    fetchAllBrands().then((data) => {
       data.forEach((item) => (item.disabled = true));
-      setTypeArray(data);
+      setBrandArray(data);
     });
   }, []);
 
   useEffect(() => {
     if (dialogResult === "Удалить") {
-      deleteType(selected).then((res) => {
+      deleteBrand(selected).then((res) => {
         if (res === 200) {
           setMessage({
             title: "Успешно",
@@ -28,33 +28,36 @@ const Type = observer(() => {
             cancel: "",
             ok: "OK",
           });
-          setTypeArray(typeArray.filter((item) => item.id !== selected));
+          setBrandArray(brandArray.filter((item) => item.id !== selected));
           openModal("mess");
         }
       });
     }
   }, [dialogResult]);
 
-  const addType = () => {
-    setTypeArray([...typeArray, { name: "", id: new Date(), disabled: false }]);
+  const addBrand = () => {
+    setBrandArray([
+      ...brandArray,
+      { name: "", id: new Date(), disabled: false },
+    ]);
   };
 
-  const editType = (id) => {
-    const editType = typeArray.map((item) =>
+  const editBrand = (id) => {
+    const editBrand = brandArray.map((item) =>
       item.id === id ? { ...item, disabled: false } : item
     );
-    setTypeArray(editType);
+    setBrandArray(editBrand);
   };
 
-  const handleSaveType = async (e) => {
+  const handleSaveBrand = async (e) => {
     e.preventDefault();
 
-    const typeToSave = typeArray
-      .filter((type) => type.name !== "")
-      .filter((type) => type.disabled === false);
-    let saveType = new FormData();
-    saveType.append("data", JSON.stringify(typeToSave));
-    await updateType(saveType);
+    const brandToSave = brandArray
+      .filter((brand) => brand.name !== "")
+      .filter((brand) => brand.disabled === false);
+    let saveBrand = new FormData();
+    saveBrand.append("data", JSON.stringify(brandToSave));
+    await updateBrand(saveBrand);
     e.target.reset();
     history.push("/lk");
   };
@@ -71,8 +74,8 @@ const Type = observer(() => {
   };
 
   const changeProps = (key, value, prop_id) => {
-    setTypeArray(
-      typeArray.map((item) =>
+    setBrandArray(
+      brandArray.map((item) =>
         item.id === prop_id ? { ...item, [key]: value } : item
       )
     );
@@ -80,14 +83,14 @@ const Type = observer(() => {
 
   return (
     <div className='stock'>
-      <h4 className='stock__title'>Тип модели</h4>
+      <h4 className='stock__title'>Марка</h4>
       <Link to='/lk'>Назад</Link>
       <div className='stock__pki'>
-        <form className='table' onSubmit={handleSaveType}>
+        <form className='table' onSubmit={handleSaveBrand}>
           <fieldset>
-            <legend>Модели</legend>
+            <legend>Марки</legend>
             <ol>
-              {typeArray.map((item) => (
+              {brandArray.map((item) => (
                 <li key={item.name + item.id}>
                   <div className='table__row'>
                     <input
@@ -102,7 +105,7 @@ const Type = observer(() => {
                       disabled={item.disabled}
                     />
 
-                    <button type='button' onClick={() => editType(item.id)}>
+                    <button type='button' onClick={() => editBrand(item.id)}>
                       Редактировать
                     </button>
                     <DeleteForeverIcon
@@ -114,8 +117,8 @@ const Type = observer(() => {
               ))}
             </ol>
             <div className='table__add'>
-              <button className='stock__btn' type='button' onClick={addType}>
-                Добавить модель
+              <button className='stock__btn' type='button' onClick={addBrand}>
+                Добавить марку
               </button>
             </div>
           </fieldset>
@@ -130,4 +133,4 @@ const Type = observer(() => {
   );
 });
 
-export default Type;
+export default Brand;

@@ -13,11 +13,14 @@ const Nav = observer(() => {
       <li className={pathname === "/" ? "nav__active" : ""}>
         <Link to='/'>Главная</Link>
       </li>
-      <li className={pathname === "/device" ? "nav__active" : ""}>
-        <Link to='/device'>Устройства</Link>
+      <li className={pathname === "/about" ? "nav__active" : ""}>
+        <Link to='/about'>О проекте</Link>
       </li>
-      <li className={pathname === "/shop" ? "nav__active" : ""}>
-        <Link to='/shop'>Магазин</Link>
+      <li className={pathname === "/contacts" ? "nav__active" : ""}>
+        <Link to='/contacts'>Контакты</Link>
+      </li>
+      <li className={pathname === "/pay" ? "nav__active" : ""}>
+        <Link to='/pay'>Оплата/доставка</Link>
       </li>
       <li className={pathname === "/basket" ? "nav__active" : ""}>
         <Link to='/basket'>
