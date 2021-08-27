@@ -26,6 +26,11 @@ export const check = async () => {
 };
 
 export const fetchUserInfo = async (id) => {
-  const { data } = await $authHost.get("api/userInfo/" + id);
+  const { data } = await $authHost.get("api/user/info/" + id);
+  return data;
+};
+
+export const updateUserInfo = async (id, formData) => {
+  const { data } = await $authHost.put("api/user/info/" + id, formData);
   return data;
 };

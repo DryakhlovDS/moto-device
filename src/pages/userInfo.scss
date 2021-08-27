@@ -62,6 +62,29 @@
       border: 1px solid var(--color-yellow);
       border-radius: 4px;
     }
+
+    & button {
+      --color-text: var(--color-white);
+      margin-top: 20px;
+      padding: 10px 20px;
+      width: 100%;
+      border: 1px solid var(--color-text);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--color-text);
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.3s ease-out;
+
+      &:hover {
+        background: var(--color-text);
+        color: var(--color-purple);
+      }
+
+      &[type="submit"] {
+        --color-text: var(--color-yellow);
+      }
+    }
   }
 
   &__group {

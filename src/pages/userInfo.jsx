@@ -2,17 +2,20 @@ import "./userInfo.scss";
 import { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../store/UserStore";
-import { fetchUserInfo } from "../http/userAPI";
+import { fetchUserInfo, updateUserInfo } from "../http/userAPI";
+import { DeviceContext } from "../store/store";
 
 const UserInfo = () => {
   const { user } = useContext(UserContext);
+  const { openModal, setMessage } = useContext(DeviceContext);
   const { nickname } = useParams();
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState({ adress: {} });
 
   useEffect(() => {
     if (nickname === user.user.nickname)
       fetchUserInfo(user.user.id).then((res) =>
         setUserInfo({
+          ...userInfo,
           ...res,
           nickname: user.user.nickname,
           email: user.user.email,
@@ -20,12 +23,21 @@ const UserInfo = () => {
       );
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const values = new FormData(e.target);
-    console.log("values", values);
+    const res = await updateUserInfo(user.user.id, values);
+    if (res.length) {
+      setMessage({
+        title: "Успешно",
+        text: `Ваши данные обновлены`,
+        cancel: "",
+        ok: "OK",
+      });
+      openModal("mess");
+    }
   };
-
+  console.log("userInfo", userInfo.phone);
   return (
     <section className='user-page'>
       <div className='container'>
@@ -39,7 +51,7 @@ const UserInfo = () => {
                 <input
                   type='text'
                   name='secondName'
-                  defaultValue={userInfo.secondName}
+                  defaultValue={userInfo.secondName || ""}
                 />
               </div>
               <div className='user-page__group'>
@@ -47,7 +59,7 @@ const UserInfo = () => {
                 <input
                   type='text'
                   name='firstName'
-                  defaultValue={userInfo.firstName}
+                  defaultValue={userInfo.firstName || ""}
                 />
               </div>
               <div className='user-page__group'>
@@ -55,7 +67,7 @@ const UserInfo = () => {
                 <input
                   type='text'
                   name='nickname'
-                  defaultValue={user.user.nickname}
+                  defaultValue={user.user.nickname || ""}
                 />
               </div>
             </fieldset>
@@ -65,25 +77,24 @@ const UserInfo = () => {
                 <label>Регион:</label>
                 <input
                   type='text'
-                  name='name'
-                  defaultValue={userInfo.secondName}
+                  name='region'
+                  defaultValue={userInfo.adress.region || ""}
                 />
               </div>
               <div className='user-page__group'>
                 <label>Населенный пункт:</label>
                 <input
-                  type='number'
-                  name='price'
-                  defaultValue={userInfo.firstName}
+                  type='text'
+                  name='city'
+                  defaultValue={userInfo.adress.city || ""}
                 />
               </div>
               <div className='user-page__group'>
                 <label>Адрес:</label>
                 <input
-                  type='number'
-                  id='price'
-                  name='price'
-                  defaultValue={userInfo.firstName}
+                  type='text'
+                  name='street'
+                  defaultValue={userInfo.adress.street || ""}
                 />
               </div>
             </fieldset>
@@ -99,9 +110,10 @@ const UserInfo = () => {
               </div>
               <div className='user-page__group'>
                 <label>Телефон:</label>
-                <input type='text' name='phone' defaultValue={"+7"} />
+                <input type='text' name='phone' defaultValue={userInfo.phone} />
               </div>
             </fieldset>
+            <button type='submit'>Save</button>
           </form>
         </div>
       </div>

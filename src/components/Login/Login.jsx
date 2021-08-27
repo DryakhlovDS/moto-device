@@ -51,6 +51,7 @@ function Login({ setOpenModal }) {
             required
             name='email'
             onBlur={(e) => setEmail(e.target.value)}
+            onChange={() => setErrorStr("")}
           />
         </fieldset>
         <fieldset>
@@ -61,6 +62,7 @@ function Login({ setOpenModal }) {
             required
             name='password'
             onBlur={(e) => setPass(e.target.value)}
+            onChange={() => setErrorStr("")}
           />
         </fieldset>
         {auth === "reg" && (
@@ -70,7 +72,7 @@ function Login({ setOpenModal }) {
               type='password'
               id='confirmPass'
               name='confirmPass'
-              onBlur={(e) => setValid(pass === e.target.value)}
+              onChange={(e) => setValid(pass === e.target.value)}
             />
             {!isValidPass && pass && (
               <p className='auth__helptext'>Пароль не совпадает</p>

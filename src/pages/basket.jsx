@@ -1,6 +1,6 @@
 import "./basket.scss";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { BasketContext } from "../store/BasketStore";
 import { DeviceContext } from "../store/store";
 import { DevicesContext } from "../store/DevicesStore";
@@ -9,12 +9,13 @@ import CardHorizon from "../components/CardHorizon/CardHorizon";
 import { observer } from "mobx-react-lite";
 import { UserContext } from "../store/UserStore";
 import { buyDevices } from "../http/buyAPI";
+import { fetchUserInfo } from "../http/userAPI";
 
 const Basket = observer(() => {
   const { basket } = useContext(BasketContext);
   const { devices } = useContext(DevicesContext);
   const { user } = useContext(UserContext);
-  const { openModal } = useContext(DeviceContext);
+  const { openModal, dialogResult, setMessage } = useContext(DeviceContext);
 
   const goods = basket.allDevices.length;
   const totalCost = basket.allDevices.reduce(
@@ -25,6 +26,27 @@ const Basket = observer(() => {
     (acc, { count }) => acc + count,
     0
   );
+
+  useEffect(() => {
+    if (dialogResult === "Оформить") {
+      const toBuy = { user_id: user.user.id, devices: basket.allDevices };
+      toBuy.devices.forEach((item) => (item.info = devices.getDevice(item.id)));
+      buyDevices(toBuy).then((res) => {
+        if (res.status === 200) deleteAllGoods();
+        setMessage({
+          title: "Успешно",
+          text:
+            toBuy.devices.length > 1
+              ? `Устройства приобретены`
+              : `Устройство приобретено`,
+          cancel: "",
+          ok: "OK",
+        });
+        openModal("mess");
+      });
+    }
+  }, [dialogResult]);
+
   const changeCount = (idDevice, func) => {
     const indexDevice = basket.allDevices.findIndex(
       (item) => item.id === idDevice
@@ -39,6 +61,7 @@ const Basket = observer(() => {
         break;
     }
   };
+
   const deleteGood = (idDevice) => {
     basket.deleteFromBasket(idDevice);
   };
@@ -47,13 +70,15 @@ const Basket = observer(() => {
     basket.clearBasket();
   };
 
-  const buy = async () => {
-    const toBuy = { user_id: user.user.id, devices: basket.allDevices };
-    toBuy.devices.forEach((item) => (item.info = devices.getDevice(item.id)));
-    const res = await buyDevices(toBuy);
-    if (res.status === 200) deleteAllGoods();
-    console.log("Покупка", res);
+  const applyUserInfo = async () => {
+    const userInfo = await fetchUserInfo(user.user.id);
+    if (userInfo) {
+      user.setInfo(userInfo);
+      openModal("userInfo");
+    }
   };
+
+  const buy = async () => {};
 
   return (
     <section className='basket'>
@@ -72,7 +97,7 @@ const Basket = observer(() => {
                 <p className='info__text'>{totalGoods} товаров</p>
                 <p className='info__text'>К оплате: {totalCost} рублей</p>
                 {user.isAuth ? (
-                  <button onClick={buy}>Оформить</button>
+                  <button onClick={applyUserInfo}>Оформить</button>
                 ) : (
                   <button onClick={() => openModal("login")}>Войти</button>
                 )}

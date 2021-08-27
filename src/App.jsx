@@ -10,6 +10,7 @@ import Modal from "./components/modal/modal.jsx";
 import Login from "./components/Login/Login.jsx";
 import Message from "./components/Message/Message.jsx";
 import DeviceCard from "./components/DeviceCard/DeviceCard";
+import UserInfoCard from "./components/UserInfoCard/UserInfoCard";
 import { observer } from "mobx-react-lite";
 import { check } from "./http/userAPI";
 import { fetchAllDevices } from "./http/deviceAPI";
@@ -56,7 +57,7 @@ const App = observer(() => {
   const closeModal = (value) => {
     setOpenModal(false);
     setDialogResult(value);
-    setMessage(message);
+    // setMessage(message);
   };
 
   return (
@@ -106,6 +107,13 @@ const App = observer(() => {
         )}
         {typeOfModal === "device" && (
           <DeviceCard setOpenModal={setOpenModal} device={devices.showDevice} />
+        )}
+        {typeOfModal === "userInfo" && (
+          <UserInfoCard
+            setOpenModal={setOpenModal}
+            userInfo={user}
+            closeModal={closeModal}
+          />
         )}
       </Modal>
     </div>
