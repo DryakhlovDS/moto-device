@@ -1,16 +1,24 @@
 import "../../pages/userInfo.scss";
 import { updateUserInfo } from "../../http/userAPI";
 
-const UserInfoCard = ({ userInfo, closeModal }) => {
-  const { info, user } = userInfo;
+const UserInfoCard = ({ userInfo, closeModal, showOnly }) => {
+  let { info, user } = userInfo;
+
+  if (showOnly) {
+    user = userInfo.showUser;
+    info = user.info;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const values = new FormData(e.target);
     const res = await updateUserInfo(user.id, values);
-    if (res.length) closeModal("Оформить");
+    if (res.length || res.id) closeModal("Оформить");
   };
 
+  if (!info.adress) {
+    info.adress = { city: "", region: "", adress: "" };
+  }
   return (
     <form className='user-page__form' onSubmit={handleSubmit}>
       <fieldset>
@@ -22,6 +30,7 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
             name='secondName'
             defaultValue={info.secondName || ""}
             required
+            disabled={showOnly}
           />
         </div>
         <div className='user-page__group'>
@@ -31,6 +40,7 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
             name='firstName'
             defaultValue={info.firstName || ""}
             required
+            disabled={showOnly}
           />
         </div>
       </fieldset>
@@ -43,6 +53,7 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
             name='region'
             defaultValue={info.adress.region || ""}
             required
+            disabled={showOnly}
           />
         </div>
         <div className='user-page__group'>
@@ -52,6 +63,7 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
             name='city'
             defaultValue={info.adress.city || ""}
             required
+            disabled={showOnly}
           />
         </div>
         <div className='user-page__group'>
@@ -61,6 +73,7 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
             name='street'
             defaultValue={info.adress.street || ""}
             required
+            disabled={showOnly}
           />
         </div>
       </fieldset>
@@ -68,7 +81,12 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
         <legend>Контактные данные</legend>
         <div className='user-page__group'>
           <label>Email:</label>
-          <input type='email' name='email' defaultValue={user.email} />
+          <input
+            type='email'
+            name='email'
+            defaultValue={user.email}
+            disabled={showOnly}
+          />
         </div>
         <div className='user-page__group'>
           <label>Телефон:</label>
@@ -77,10 +95,11 @@ const UserInfoCard = ({ userInfo, closeModal }) => {
             name='phone'
             defaultValue={info.phone || "+7"}
             required
+            disabled={showOnly}
           />
         </div>
       </fieldset>
-      <button type='submit'>Подтвердить</button>
+      {!showOnly && <button type='submit'>Подтвердить</button>}
     </form>
   );
 };

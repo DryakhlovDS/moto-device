@@ -13,7 +13,6 @@ function User() {
     localStorage.removeItem("token");
   };
 
-  console.log("nick:", user.user.nickname);
   return (
     <div className='user'>
       <Link className='user__name' to={`/user/${user.user.nickname}`}>
