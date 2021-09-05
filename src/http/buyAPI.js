@@ -5,7 +5,7 @@ export const buyDevices = async (basket) => {
   return res;
 };
 
-export const fetchAllDevices = async () => {
+export const fetchAllStatistics = async () => {
   const res = await $authHost.get("api/statistics");
   return res.data;
 };

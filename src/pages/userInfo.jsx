@@ -27,7 +27,7 @@ const UserInfo = () => {
     e.preventDefault();
     const values = new FormData(e.target);
     const res = await updateUserInfo(user.user.id, values);
-    if (res.length) {
+    if (res.id || res.length) {
       setMessage({
         title: "Успешно",
         text: `Ваши данные обновлены`,
@@ -37,7 +37,7 @@ const UserInfo = () => {
       openModal("mess");
     }
   };
-  console.log("userInfo", userInfo.phone);
+
   return (
     <section className='user-page'>
       <div className='container'>

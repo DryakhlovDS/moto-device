@@ -50,6 +50,10 @@
       &:focus {
         outline-color: var(--color-yellow);
       }
+
+      &:disabled {
+        color: var(--color-white);
+      }
     }
 
     & fieldset {

@@ -115,6 +115,14 @@ const App = observer(() => {
             closeModal={closeModal}
           />
         )}
+        {typeOfModal === "user" && (
+          <UserInfoCard
+            setOpenModal={setOpenModal}
+            userInfo={user}
+            closeModal={closeModal}
+            showOnly
+          />
+        )}
       </Modal>
     </div>
   );

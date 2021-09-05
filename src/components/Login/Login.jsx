@@ -26,7 +26,7 @@ function Login({ setOpenModal }) {
       } else {
         if (isValidPass) res = await registration(email, pass);
       }
-      console.log("res:", res.message);
+
       if (res) {
         e.target.reset();
         user.setUser(res);
@@ -34,8 +34,6 @@ function Login({ setOpenModal }) {
         setOpenModal(false);
       }
     } catch (error) {
-      console.log(error.response.status);
-      console.log(error.response.data.message);
       setErrorStr(error.response.data.message);
     }
   };
